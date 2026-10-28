@@ -1,0 +1,6 @@
+#!/home/hoaakhanh/code/Data_analyst_python_midterm_project/.venv/bin/python
+import sys
+from mistune.__main__ import cli
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(cli())
