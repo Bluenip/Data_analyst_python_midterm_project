@@ -4,7 +4,7 @@
 
 Notebook chính: [mid_term_code.ipynb](mid_term_code.ipynb). Notebook chứa toàn bộ bước đọc, ghép và làm sạch dữ liệu, EDA, huấn luyện, đánh giá và kết luận. Các bảng và nhận xét định lượng được tính từ kết quả thực thi, không chép cứng số liệu mô hình.
 
-Báo cáo: [mã nguồn LaTeX](report/bao_cao_midterm.tex), kèm [hướng dẫn compile](report/README.md). Có thể tải [gói đầy đủ để đưa lên Overleaf](Bao_cao_Midterm_LaTeX.zip), chọn **XeLaTeX** và compile thành PDF. Gói gồm file `.tex` và chín hình lấy từ output notebook; không cần chạy lại Python để biên dịch báo cáo.
+Báo cáo phân tích PDF là bài nộp riêng theo đề. Bản repository hiện tại chưa có file báo cáo hoặc mã nguồn LaTeX; `Mid-Term.pdf` là đề bài. Có thể dùng bảng, hình và phần diễn giải trong notebook để viết báo cáo.
 
 ## Dữ liệu và nguồn
 
@@ -66,6 +66,6 @@ Kết quả mô tả các lượt có điểm 1–10 trong quần thể quan sá
 
 1. Notebook có code, giải thích và output.
 2. Repository GitHub public chứa bản cuối.
-3. Báo cáo phân tích PDF riêng, biên dịch từ mã nguồn LaTeX trong `report/`.
+3. Báo cáo phân tích PDF riêng (cần bổ sung; chưa có trong repository hiện tại).
 
 Theo xác nhận mới của giảng viên qua người thực hiện dự án, **không cần slide**. `Mid-Term.pdf` là **đề bài**, không phải báo cáo phân tích.
