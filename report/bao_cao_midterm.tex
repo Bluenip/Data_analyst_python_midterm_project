@@ -1,0 +1,1053 @@
+% !TeX program = xelatex
+% Encoding: UTF-8. Compile with XeLaTeX; BibTeX/Biber are not required.
+% Tables and figures use saved output from mid_term_code.ipynb.
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \PackageError{bao-cao-midterm}{Select XeLaTeX or LuaLaTeX}{This document uses Unicode fonts.}
+\fi
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+% Bundled font with Vietnamese glyphs for names and university details on the cover.
+\newfontfamily\coverfont{LiberationSerif}[Path=fonts/,Extension=.ttf,
+  UprightFont=*-Regular,BoldFont=*-Bold]
+% The source archive includes Times-compatible OpenType fonts for a stable layout.
+\IfFileExists{fonts/NimbusRoman-Regular.otf}{%
+  \setmainfont{NimbusRoman}[Path=fonts/,Extension=.otf,UprightFont=*-Regular,
+    BoldFont=*-Bold,ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic]}{%
+  \IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}}
+\IfFileExists{fonts/NimbusSans-Regular.otf}{%
+  \setsansfont{NimbusSans}[Path=fonts/,Extension=.otf,UprightFont=*-Regular,
+    BoldFont=*-Bold,ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic]}{\setsansfont{TeX Gyre Heros}}
+\IfFontExistsTF{TeX Gyre Cursor}{\setmonofont{TeX Gyre Cursor}[Scale=MatchLowercase]}{%
+  \setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]}
+\usepackage[english]{babel}
+\usepackage[left=3cm,right=2cm,top=2.5cm,bottom=2.5cm,headheight=16pt]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\graphicspath{{figures/}{report/figures/}}
+\usepackage{booktabs,tabularx,longtable,array,makecell}
+\usepackage{caption,subcaption}
+\usepackage{placeins,float}
+\usepackage{titlesec,needspace}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\definecolor{navy}{HTML}{17334C}
+\definecolor{teal}{HTML}{087F8C}
+\definecolor{muted}{HTML}{526474}
+\definecolor{light}{HTML}{EDF4F8}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{xurl}
+\usepackage[unicode,colorlinks=true,linkcolor=navy,citecolor=teal,urlcolor=teal]{hyperref}
+\usepackage{bookmark}
+\usepackage{microtype}
+
+\hypersetup{
+  pdftitle={Midterm Project Report: Book Rating Classification},
+  pdfsubject={Assignment 6 --- Classification: Book Recommendation Dataset},
+  pdfkeywords={Python, data analysis, Book-Crossing, classification, target encoding}
+}
+\setstretch{1.20}
+\raggedbottom
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.75}
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.70}
+\titleformat{\section}{\sffamily\bfseries\fontsize{15}{18}\selectfont\color{navy}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\sffamily\bfseries\fontsize{12.5}{15}\selectfont\color{navy}}{\thesubsection}{0.7em}{}
+\titlespacing*{\section}{0pt}{1.25\baselineskip}{0.45\baselineskip}
+\titlespacing*{\subsection}{0pt}{0.95\baselineskip}{0.30\baselineskip}
+\setlength{\textfloatsep}{13pt plus 3pt minus 2pt}
+\setlength{\intextsep}{12pt plus 3pt minus 2pt}
+\renewcommand{\arraystretch}{1.12}
+\setlength{\parindent}{1.2em}
+\setlength{\parskip}{0.3em}
+\setlength{\emergencystretch}{3em}
+\setcounter{tocdepth}{2}
+\captionsetup{font=footnotesize,labelfont=bf,justification=raggedright,singlelinecheck=false,skip=7pt}
+\setlist[itemize]{topsep=3pt,itemsep=2pt,leftmargin=1.6em}
+\setlist[enumerate]{topsep=3pt,itemsep=2pt,leftmargin=1.8em}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\source}[1]{\par\smallskip{\raggedright\footnotesize\color{muted}Source: #1.\par}}
+\newcommand{\reportfigure}[5][1.00]{%
+  \begin{figure}[htbp]
+    \centering
+\includegraphics[width=#1\linewidth,height=0.36\textheight,keepaspectratio]{#2}
+    \caption{#3}\label{#4}
+    \source{#5}
+  \end{figure}%
+}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{muted}BOOK RATING CLASSIFICATION}
+\fancyhead[R]{\small\sffamily\color{muted}ASSIGNMENT 06}
+\fancyfoot[L]{\footnotesize\color{muted}Data Analysis with Python}
+\fancyfoot[R]{\footnotesize\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{center}
+  \includegraphics[width=4.2cm]{neu_logo.png}\par
+  \vspace{0.2cm}
+  {\coverfont\bfseries\large\color{navy}ĐẠI HỌC KINH TẾ QUỐC DÂN\par}
+  \vspace{0.6cm}
+  {\sffamily\large\color{teal}MIDTERM PROJECT REPORT\par}
+  \vspace{0.25cm}
+  {\noindent\color{teal}\rule{\linewidth}{1.5pt}\par}
+  \vspace{0.4cm}
+  {\sffamily\bfseries\Huge\color{navy}BOOK RATING\\[0.15cm]CLASSIFICATION\par}
+  \vspace{0.35cm}
+  {\sffamily\Large Book Recommendation Dataset\par}
+  \vspace{0.2cm}
+  {\large Assignment 6 --- Classification\par}
+  \end{center}
+  \vspace{0.35cm}
+  \noindent\colorbox{light}{%
+    \parbox{0.93\linewidth}{\vspace{0.25cm}
+      \textbf{Research Question}\\[0.15cm]
+      Can a rating be classified as high (8--10) or not high (1--7) using user and book
+      information together with other ratings in the training set?
+      \vspace{0.25cm}}
+  }
+  \vspace{0.35cm}
+  \begin{center}
+  \begin{tabular}{ccc}
+    \textbf{433,671} & \textbf{0.6553} & \textbf{0.7306} \\
+    Explicit ratings & Test Macro F1 & Test ROC-AUC
+  \end{tabular}
+  \end{center}
+  \vspace{0.25cm}
+  {\coverfont
+  \noindent\textbf{Thành viên thực hiện:}\par
+  \noindent Lương Văn Thái Tuấn -- 11258665\\
+  Nguyễn Thị Khánh Hòa -- 11253156\par
+  \medskip
+  \noindent\textbf{Giảng viên hỗ trợ:} Tiến sĩ Trần Đức Minh\par}
+  \vfill
+  \noindent\textbf{Notebook:} \nolinkurl{mid_term_code.ipynb}\\
+  \textbf{Course:} Data Analysis with Python\\
+  \textbf{Selected model:} Logistic Regression + Target Encoding\\
+  \textbf{Repository:} \url{https://github.com/Bluenip/Data_analyst_python_midterm_project}\\
+  \textbf{Report date:} 2 November 2026
+\end{titlepage}
+\hypersetup{pageanchor=true}
+\pagenumbering{roman}
+
+\Needspace{10\baselineskip}
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+This report uses the Books, Users, and Ratings tables from the Book Recommendation Dataset to
+formulate a binary classification task at the individual-rating level. Only ratings from 1 to 10
+are used as labels; ratings of 8 or higher are designated class 1. Zero-valued records are retained
+when describing rating activity but are not treated as low ratings. After integration and cleaning,
+the classification dataset contains \textbf{433,671 ratings}, of which \textbf{57.62\%} belong to class 1.
+
+The workflow covers key validation and encoding checks, ISBN normalization, missing and anomalous
+value handling, exploratory data analysis (EDA), feature construction, a stratified 70/15/15
+train/validation/test split, and comparisons of four algorithms across five feature groups. Each
+algorithm uses the same configuration across feature groups. Imputation, scaling, and one-hot
+encoding are fit on training data only; user- and book-level rates are generated with smoothed
+out-of-fold (OOF) encoding to avoid using a row's own label to encode that row.
+
+Of the 20 evaluated configurations, Logistic Regression with Target Encoding was selected by
+validation Macro F1. On the test set, it achieved an Accuracy of \textbf{65.65\%}, a Macro F1 of
+\textbf{0.6553}, and a ROC-AUC of \textbf{0.7306}. Compared with a baseline that always predicts the
+majority class, Macro F1 increased by \textbf{0.2897} and Accuracy by \textbf{8.03 percentage points}.
+The results indicate that rating-history features from the training set provide predictive signal,
+but performance declines for cases with both an unseen user and an unseen book. The evaluation covers one random rating-level split, with a test set already inspected during
+earlier development. Results therefore describe this experiment rather than an independent
+confirmation of future performance or recommendation ranking quality.
+
+\clearpage
+\begingroup
+\footnotesize
+\setstretch{1.0}
+\setlength{\parskip}{0pt}
+\tableofcontents
+\endgroup
+\clearpage
+\listoffigures
+\listoftables
+\clearpage
+\pagenumbering{arabic}
+
+\Needspace{10\baselineskip}
+\section{Problem Definition and Scope}
+\Needspace{5\baselineskip}
+\subsection{Objective}
+The unit of observation is one user's rating of one book. The objective is to estimate whether a
+rating belongs to the high-rating range. The task is framed as binary classification rather than
+exact score prediction:
+\begin{equation}
+ y_i = \operatorname{liked}_i =
+ \begin{cases}
+  1, & \text{if } 8 \le r_i \le 10,\\
+  0, & \text{if } 1 \le r_i \le 7.
+ \end{cases}
+ \label{eq:target}
+\end{equation}
+Here, $r_i$ denotes the \code{Book-Rating} for observation $i$. The threshold of 8 is a project
+convention, not a requirement of the midterm assignment. Class 0 means only that a rating does not
+meet the high-rating threshold; it does not imply that the user disliked the book.
+
+According to the data provider, ratings from 1 to 10 are explicit, while 0 represents implicit
+feedback~\cite{dataset,description}. Because zero-valued records do not provide an explicit
+preference score, they are not assigned to either class in Equation~\eqref{eq:target}.
+
+\Needspace{5\baselineskip}
+\subsection{Research Questions}
+\begin{enumerate}
+  \item What patterns characterize the class distribution, user ages, and user activity levels?
+  \item Do book metadata, country, and ID-based statistics improve validation classification
+  performance over the initial age- and year-based features?
+  \item Which configuration best identifies both classes and improves on the baseline?
+  \item Does aggregate performance reflect results for users or books unseen during training?
+\end{enumerate}
+
+\Needspace{5\baselineskip}
+\subsection{Interpretation Scope}
+The data represent only ratings present in the collected dataset. The model classifies a rating
+known to have a score from 1 to 10; it does not predict the probability that an arbitrary user will
+read, purchase, or rate a book. Classification metrics also do not replace ranking metrics for a
+recommendation system. Findings from EDA are descriptive or hypothesis-generating. The main sequence is data validation
+and cleaning, EDA, feature construction, validation-based selection, and test error analysis.
+
+\Needspace{10\baselineskip}
+\section{Data, Validation, and Integration}
+\Needspace{5\baselineskip}
+\subsection{Source and Structure}
+The data come from Möbius's Book Recommendation Dataset on Kaggle, the source specified for
+Assignment 6~\cite{dataset}. The three tables provide distinct types of information, summarized in
+Table~\ref{tab:raw}.
+\begin{table}[htbp]
+\centering
+\caption{Size of the three raw data tables.}\label{tab:raw}
+\begin{tabular}{lrr}
+\toprule
+Table & Rows & Columns \\
+\midrule
+Books & 271,360 & 8 \\
+Users & 278,858 & 3 \\
+Ratings & 1,149,780 & 3 \\
+\bottomrule
+\end{tabular}
+\source{Notebook, Section 1: Data Inspection}
+\end{table}
+
+\begin{itemize}
+  \item \textbf{Books:} ISBN, title, author, publication year, publisher, and three cover-image URLs.
+  \item \textbf{Users:} User-ID, Location, and Age.
+  \item \textbf{Ratings:} User-ID, ISBN, and Book-Rating.
+\end{itemize}
+Image URLs are excluded because the project does not process images. ISBNs are loaded as strings to
+preserve leading zeros and the character X. All three files are checked using strict UTF-8 decoding
+before being read with \code{pandas.read\_csv}; a loop automates the loading process.
+
+\Needspace{5\baselineskip}
+\subsection{Key and Initial Quality Checks}
+In the raw data, ISBNs in Books and User-IDs in Users are unique. There are no exact duplicate rows
+or duplicate User-ID--ISBN pairs in Ratings. A total of 118,644 ratings have ISBNs that do not match
+Books; every User-ID in Ratings matches Users. The checks also find one Books ISBN and 14 Ratings
+ISBNs with leading or trailing whitespace. These join-key issues must be resolved before creating
+the clean analysis table, even though the original keys are unique.
+
+Raw ages range from 0 to 244 and require review before use. Three book rows contain publisher names
+in the publication-year field, with some following fields containing misaligned URLs. These rows are
+isolated during cleaning rather than corrected by guesswork.
+
+\Needspace{5\baselineskip}
+\subsection{Relationships and Join Strategy}
+Ratings is the central table. Each user may contribute multiple ratings, and each book may appear in
+multiple ratings, so both relationships are many-to-one from Ratings to their respective lookup tables:
+\begin{center}
+\begin{tabular}{c}
+\code{Ratings.User-ID} $\longrightarrow$ \code{Users.User-ID}\\[2pt]
+\code{Ratings.ISBN} $\longrightarrow$ \code{Books.ISBN}.
+\end{tabular}
+\end{center}
+The project uses a \textbf{left join}, not concatenation, because the three tables have different
+structures. The \code{validate='many\_to\_one'} parameter ensures that duplicate keys in a lookup
+table do not multiply rows; \code{indicator} records match status. After each join, the row count is
+checked against the number of Ratings records. Retaining records without book metadata avoids
+silently shrinking the sample; missing values are handled explicitly during preprocessing.
+\FloatBarrier
+
+\Needspace{10\baselineskip}
+\section{Cleaning and Classification Dataset Construction}
+\Needspace{5\baselineskip}
+\subsection{Cleaning Rules}
+\begin{enumerate}
+  \item \textbf{ISBN and duplicates:} strip leading and trailing whitespace from ISBNs in Books and
+  Ratings, then remove exact duplicate rows. One duplicate Books row is removed after normalization.
+  If conflicting metadata remain for an ISBN or conflicting ratings for a User-ID--ISBN pair, the
+  program stops for review rather than selecting a record automatically.
+  \item \textbf{Publication year:} convert values to numeric and isolate the three rows that cannot
+  be converted because of field misalignment. Year 0 and years outside 1450--2026 are treated as
+  missing. This is a project cleaning rule, not a claim that every value outside this range is invalid.
+  \item \textbf{Age:} retain ages from 5 to 100 and set other values to missing without deleting users.
+  The number of users with missing age increases from 110,762 to 112,010 after this step.
+  \item \textbf{Strings:} normalize whitespace, decode HTML entities in book titles, and replace
+  missing or empty author, publisher, and location values in the lookup tables with \code{Unknown}.
+  Missing values introduced by the left join are retained and handled in the pipeline.
+  \item \textbf{Missingness indicators:} create \code{Age\_missing} and \code{Year\_missing}, then
+  update them after joining to include books with no matching metadata. Median imputation is not
+  performed at this stage.
+  \item \textbf{Ratings and target:} validate integer ratings in the range 0--10 and store them as a
+  small integer type; use only ratings from 1 to 10 to create \code{liked}, as defined in
+  Equation~\eqref{eq:target}.
+\end{enumerate}
+
+The clean joined table retains all 1,149,780 ratings. After key normalization and isolation of
+malformed rows, 118,645 ratings have no clean book metadata. This total is one higher than the raw
+unmatched-ISBN count because normalization and quarantining change which book keys are available. Within the 433,671-rating classification
+dataset, 49,829 records have no book metadata, or 11.49\%. These counts use different denominators
+and should not be interchanged.
+
+\Needspace{5\baselineskip}
+\subsection{Remaining Missing Values and Training-Time Handling}
+\begin{table}[htbp]
+\centering
+\caption{Missing data in the classification dataset after the clean join.}\label{tab:missing}
+\begin{tabularx}{\linewidth}{Yrr}
+\toprule
+Field & Missing ratings & Percentage \\
+\midrule
+Age & 130,571 & 30.11\% \\
+Year-Of-Publication & 55,635 & 12.83\% \\
+Book-Title & 49,829 & 11.49\% \\
+Book-Author & 49,829 & 11.49\% \\
+Publisher & 49,829 & 11.49\% \\
+\bottomrule
+\end{tabularx}
+\source{Notebook, missing-value table in Section 3; denominator: 433,671 ratings}
+\end{table}
+Age is missing for 30.11\% of classification ratings but for 40.17\% of users in Users; the
+difference arises because one user may contribute multiple ratings. For numeric variables, the
+pipeline learns the median from training data for imputation and then scales the values. Missing
+categorical values are represented as \code{Unknown}. Missingness indicators allow the model to
+distinguish observed values from imputed ones.
+\FloatBarrier
+
+\Needspace{10\baselineskip}
+\section{Exploratory Data Analysis}
+\Needspace{5\baselineskip}
+\subsection{Age and Class Distributions}
+After cleaning, 166,848 users have valid ages and 112,010 have missing ages. The mean known age
+is approximately 34.75 and the median is 32; the 25th and 75th percentiles are 24 and 44.
+Figure~\ref{fig:age} summarizes users rather than rating records: each user contributes once.
+Most known ages are among younger and middle-aged adults; users with missing ages are excluded.
+\reportfigure{01_phan_phoi_tuoi_en.pdf}{User age distribution after applying the 5--100 validity rule; 166,848 users with nonmissing ages.}{fig:age}{Notebook, Section 4.1; chart regenerated from Users}
+
+\begin{samepage}
+Class 1 contains \textbf{249,887 ratings} (\textbf{57.62\%}), while class 0 contains
+\textbf{183,784 ratings} (\textbf{42.38\%}); see Figure~\ref{fig:labels}.
+This is a modest class imbalance. Always predicting class 1 already yields about 57.62\% Accuracy,
+so the evaluation also uses Macro F1 and per-class Recall to assess recognition of both groups.
+\par\end{samepage}
+\reportfigure[0.92]{02_phan_bo_nhan_en.pdf}{Class distribution among the 433,671 explicit ratings; each rating contributes once.}{fig:labels}{Notebook, Section 4.2; chart regenerated from Ratings}
+\FloatBarrier
+
+\Needspace{5\baselineskip}
+\subsection{Rating Scores and Book Popularity}
+Of the 1,149,780 raw ratings, 716,109 have a score of 0 and 433,671 have scores from 1 to 10.
+Among explicit ratings, score 8 is most frequent with 103,736 ratings, followed by score 10 with
+78,610 and score 7 with 76,457. The distribution is tilted toward relatively high scores, consistent
+with class 1 representing more than half of the classification dataset.
+\reportfigure[0.92]{03_phan_phoi_diem_en.pdf}{Counts of explicit ratings by score (1--10); zero-valued ratings are excluded.}{fig:ratings}{Notebook, Section 4.2}
+
+\begin{table}[htbp]
+\centering
+\caption{Five most frequently rated books in Ratings, including zero-valued ratings.}\label{tab:popular}
+\small
+\begin{tabularx}{\linewidth}{lYr}
+\toprule
+ISBN & Title & Ratings \\
+\midrule
+0971880107 & Wild Animus & 2,502 \\
+0316666343 & The Lovely Bones: A Novel & 1,295 \\
+0385504209 & The Da Vinci Code & 883 \\
+0060928336 & Divine Secrets of the Ya-Ya Sisterhood: A Novel & 732 \\
+0312195516 & The Red Tent (Bestselling Backlist) & 723 \\
+\bottomrule
+\end{tabularx}
+\source{Notebook, Section 4.4}
+\end{table}
+
+Table~\ref{tab:popular} measures rating frequency, not preference. For example, \emph{Wild Animus}
+ranks first with 2,502 ratings, but its mean explicit score is only about 4.39 across 581 rated
+records. Conversely, the book with ISBN 1888054557 has a mean score of 10.00 but only 11 explicit
+ratings. This illustrates why rating counts and mean scores should be considered together; it does
+not establish a negative correlation between popularity and scores across all books.
+
+When ranking mean scores, the notebook includes only books with at least 10 explicit ratings to
+reduce the influence of books with very few scores. This threshold does not eliminate small-sample
+variation; rankings based on 10--20 ratings should be interpreted cautiously.
+\FloatBarrier
+
+\Needspace{5\baselineskip}
+\subsection{Age and Rating Class}
+Among ratings with a known user age, mean ages in classes 0 and 1 are approximately 35.99 and
+36.78, respectively. The difference is descriptive; a comparison of means alone cannot establish
+how well age classifies individual ratings. When age is grouped into
+bins, the proportion of high ratings varies as shown in Figure~\ref{fig:age-target} and
+Table~\ref{tab:age-groups}.
+\reportfigure{04_tuoi_va_diem_cao_en.pdf}{Share of high ratings (8--10) by age group.}{fig:age-target}{Notebook, Section 4.6}
+
+\begin{table}[htbp]
+\centering
+\caption{Ratings and class 1 share by age group, restricted to valid ages.}\label{tab:age-groups}
+\small
+\begin{tabular}{lrr}
+\toprule
+Age group & Ratings & High-rating share \\
+\midrule
+5--14 & 3,875 & 60.28\% \\
+15--24 & 42,987 & 58.85\% \\
+25--34 & 105,871 & 58.57\% \\
+35--44 & 73,988 & 59.55\% \\
+45--54 & 51,458 & 64.93\% \\
+55--64 & 18,963 & 60.45\% \\
+65--74 & 4,774 & 59.61\% \\
+75--84 & 859 & 53.20\% \\
+85--94 & 75 & 34.67\% \\
+95--100 & 250 & 76.00\% \\
+\bottomrule
+\end{tabular}
+\source{Notebook, Section 4.6}
+\end{table}
+
+The 45--54 age group has 51,458 ratings and a 64.93\% high-rating share. The 85--94 group has a
+34.67\% share based on only 75 ratings, while the 95--100 group reaches 76.00\% across 250 ratings.
+Extremes in small groups should not be treated as stable patterns. Each row is a rating, so highly
+active users contribute more weight to these proportions.
+
+For the $10\times2$ age-group/class table, the notebook reports
+$\chi^2(9)=706.6158$ and $p\approx2.61537\times10^{-146}$. As a descriptive effect-size summary,
+Cram\'er's $V=\sqrt{\chi^2/(N\min(9,1))}\approx0.0483$, with $N=303{,}100$ ratings,
+indicates a small association in this contingency table despite the tiny nominal $p$-value.
+The usual independence assumption may fail because users and books contribute repeated ratings;
+the $p$-value is therefore a reference calculation, not population-level confirmation. Age remains
+a candidate feature to be evaluated through validation performance.
+\FloatBarrier
+
+\Needspace{5\baselineskip}
+\subsection{User Activity and Rating Tendencies}
+The most active user by explicit ratings is ID 11676 with 8,524 ratings, followed by ID 98391 with
+5,802. Most users have far fewer ratings. Figure~\ref{fig:age-activity} shows users with a valid known age and at least one explicit rating.
+Its logarithmic count axis makes the low-activity majority visible alongside highly active users;
+users with missing ages do not appear in this plot.
+\reportfigure{05_tuoi_va_hoat_dong_en.pdf}{User age versus explicit rating count, with a logarithmic rating-count axis.}{fig:age-activity}{Notebook, Section 4.7}
+
+To avoid treating all ratings as independent users, the next analysis aggregates each user's class 1
+share. The low-activity group contains users at or below the 25th percentile of rating counts
+($\leq 1$ rating), while the high-activity group contains users at or above the 75th percentile
+($\geq 3$ ratings). The two groups do not overlap in this dataset.
+\begin{table}[htbp]
+\centering
+\caption{Mean user-level high-rating share by activity group.}\label{tab:activity}
+\small
+\begin{tabularx}{\linewidth}{Yrrr}
+\toprule
+Group & Users & \makecell{Median\\ratings per user} & \makecell{Mean user-level\\high-rating share} \\
+\midrule
+Low activity & 45,382 & 1 & 56.27\% \\
+High activity & 22,568 & 6 & 53.00\% \\
+\bottomrule
+\end{tabularx}
+\source{Notebook, Section 4.8}
+\end{table}
+\reportfigure{06_ty_le_diem_cao_theo_hoat_dong_en.pdf}{Comparison of mean user-level high-rating shares across activity groups.}{fig:activity-rate}{Notebook, Section 4.8}
+\FloatBarrier
+
+Each user contributes one share to the group mean, regardless of their number of ratings;
+users with exactly two ratings belong to neither comparison group. The high-activity group has a
+mean high-rating share about 3.28 percentage points lower, using unrounded rates. The
+Mann--Whitney U statistic is $U=566,384,643$, with $p\approx3.21475\times10^{-125}$. However, a
+user with one rating always has a share of 0 or 1, while a user with many ratings can have a share
+between these extremes. Different rating counts therefore produce different variability, so a
+difference in distributions does not automatically demonstrate a difference in underlying
+preference tendencies. Users may also rate many of the same books.
+
+These results motivate testing activity counts and ID-based statistics. Full-sample EDA summaries
+are not used directly as model inputs; features for modeling are recomputed from the training set.
+\FloatBarrier
+
+\Needspace{10\baselineskip}
+\section{Feature Engineering and Data-Split Design}
+\Needspace{5\baselineskip}
+\subsection{Five Cumulative Feature Groups}
+Table~\ref{tab:features} presents the experimental sequence. Column counts refer to inputs before
+one-hot encoding, not the number of dimensions after encoding. Each step adds only the listed group,
+while keeping each algorithm's configuration fixed.
+\begin{table}[htbp]
+\centering
+\caption{Input feature groups compared in the experiments.}\label{tab:features}
+\small
+\begin{tabularx}{\linewidth}{lYc}
+\toprule
+Group & Features & Columns \\
+\midrule
+Initial & Age, Age\_missing, Year-Of-Publication, Year\_missing & 4 \\
+Metadata & Initial + Book-Author, Publisher & 6 \\
+Country & Metadata + country parsed from Location & 7 \\
+Count & Country + User\_Rating\_Count, Book\_Rating\_Count & 9 \\
+Target Encoding & Count + User\_Liked\_Rate, Book\_Liked\_Rate & 11 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\code{Book-Rating} is excluded from X because the target is derived directly from that column.
+User-ID and ISBN are used only as keys for computing statistics, not as continuous numeric inputs.
+Book titles, full Location strings, and image URLs are not used directly. EDA does not establish
+the independent effects of publication year, author, or publisher; these variables are treated as
+candidates and evaluated through validation.
+
+Country is parsed from the final comma-separated component of Location, then normalized to lowercase
+and trimmed. Missing markers such as empty strings, \code{n/a}, \code{none}, and \code{unknown} are
+mapped to \code{Unknown}; aliases such as \code{us}/\code{united states} are mapped to \code{usa},
+and \code{uk} to \code{united kingdom}. Country is unknown for 20,551 ratings, or 4.74\% of the
+classification dataset. This rule does not validate all geographic values or correct every
+self-reported error.
+
+\Needspace{5\baselineskip}
+\subsection{Train, Validation, and Test Split}
+Data are randomly split by rating, stratified by label, with \code{random\_state=56}. First, 15\%
+is held out for test; then $15/85$ of the remaining data is used for validation.
+\begin{table}[htbp]
+\centering
+\caption{Sizes of the stratified data splits.}\label{tab:split}
+\begin{tabular}{lrr}
+\toprule
+Split & Ratings & Class 1 share \\
+\midrule
+Train & 303,569 & 57.62\% \\
+Validation & 65,051 & 57.62\% \\
+Test & 65,051 & 57.62\% \\
+\bottomrule
+\end{tabular}
+\source{Notebook, Section 5.2}
+\end{table}
+\FloatBarrier
+
+Assertions verify that X and y have matching indices, that the three splits do not overlap, and
+that their union reconstructs the classification dataset. Imputation medians, scaling parameters,
+and infrequent-category groupings are fit on training data only in the pipeline, following
+recommended practices to prevent preprocessing leakage~\cite{pitfalls}. Categorical variables use
+one-hot encoding with \code{min\_frequency=100}. Infrequent categories are grouped; a new value
+maps to that group if it exists for the feature, and otherwise produces an all-zero one-hot block.
+
+\Needspace{5\baselineskip}
+\subsection{Count Features and Target Encoding Without Self-Label Leakage}
+The two count features use the number of \emph{ratings scored from 1 to 10 in the training set}.
+For a training row, one is subtracted from that ID's count to exclude the current rating. For
+validation and test, counts are looked up from training data only; unseen IDs receive 0. These
+values are not total book reads or total activity including zero-valued ratings.
+
+For an ID $e$ in fit subset $G$, the smoothed class rate is calculated as:
+\begin{equation}
+ \operatorname{TE}_{G}(e)=\frac{s_G(e)+\alpha\mu_G}{n_G(e)+\alpha},\qquad
+ \mu_G=\frac{1}{|G|}\sum_{j\in G}y_j,\quad\alpha=20,
+ \label{eq:te}
+\end{equation}
+where $n_G(e)$ is the number of ratings and $s_G(e)$ is the sum of class 1 labels for ID $e$ in
+subset $G$. The training set is divided into five stratified folds with seed 42; each fold receives
+rates computed from the other four folds only. Neither the ID statistics nor the overall rate
+$\mu_G$ uses labels from the fold being encoded. For validation and test, $G$ is the full training
+set; unseen IDs receive the training-set prior.
+
+Smoothing limits extreme rates for IDs with few ratings, while OOF prevents each row from carrying
+its own label information. Here, OOF is a feature-generation step rather than five-fold
+cross-validation for the entire model~\cite{encoding}. The number of ratings used to compute training rates differs
+from that used for validation/test; this distributional difference remains a limitation when
+interpreting results.
+\FloatBarrier
+
+\Needspace{10\baselineskip}
+\section{Algorithms, Baseline, and Evaluation Criteria}
+\Needspace{5\baselineskip}
+\subsection{Model Configurations}
+Table~\ref{tab:models} lists the four classification algorithms evaluated in the notebook.
+Each pipeline has a separately cloned preprocessor and estimator, preventing fitted state from a
+previous experiment from being overwritten. The algorithm seed is 42.
+\begin{table}[htbp]
+\centering
+\caption{Configurations held fixed across the five feature groups.}\label{tab:models}
+\small
+\begin{tabularx}{\linewidth}{lY}
+\toprule
+Algorithm & Main configuration \\
+\midrule
+Logistic Regression (LR) & class\_weight=balanced, max\_iter=1000 \\
+Decision Tree (DT) & class\_weight=balanced, max\_depth=20, min\_samples\_leaf=50 \\
+Linear SVM (SVM) & LinearSVC, class\_weight=balanced, max\_iter=3000 \\
+Neural Network (MLP) & Two hidden layers (64, 32), ReLU, Adam; alpha=0.001; batch=1024;
+learning\_rate\_init=0.001; max. 100 epochs; tol=0.001; n\_iter\_no\_change=5;
+early\_stopping=False \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+LR and Linear SVM provide linear classifiers; DT can represent nonlinear splits through
+condition-based rules; and MLP learns nonlinear transformations through hidden layers. The project
+does not perform exhaustive hyperparameter optimization. The three algorithms that support
+\code{class\_weight} use the balanced setting; MLP retains default sample weights, so the algorithms
+do not handle class imbalance identically.
+
+MLP stopping is based on training-loss improvement, without an internal holdout split. This avoids
+using labels from an internal holdout to create target encodings for the fit subset. Loss-based
+stopping does not directly optimize Macro F1. Configurations remain fixed and are not changed based
+on test results.
+
+\Needspace{5\baselineskip}
+\subsection{Baseline}
+We fit a \code{DummyClassifier} with the \code{most\_frequent} strategy before the other algorithms. For this
+dataset, the baseline always predicts class 1. On validation and test, it achieves about 57.62\%
+Accuracy and a class 1 F1 of about 0.7311, but class 0 Recall is 0, Macro F1 is only about 0.3656,
+and ROC-AUC is 0.5. This reference point helps identify models whose aggregate scores are driven
+by predicting the majority class.
+
+\Needspace{5\baselineskip}
+\subsection{Metrics and Selection Rule}
+Class 1 is designated as positive: TP is a correctly predicted high rating, FP is a high-rating
+prediction for an actual score from 1 to 7, FN is a missed actual score from 8 to 10, and TN is a
+correct prediction for the 1--7 group. Metrics are computed consistently with scikit-learn~\cite{metrics}:
+\begin{align}
+ \mathrm{Accuracy} &= \frac{TP+TN}{TP+TN+FP+FN},\\
+ \mathrm{Precision}_1 &= \frac{TP}{TP+FP},\qquad
+ \mathrm{Recall}_1 = \frac{TP}{TP+FN},\\
+ \mathrm{Recall}_0 &= \frac{TN}{TN+FP},\qquad
+ F1_k = \frac{2\,\mathrm{Precision}_k\,\mathrm{Recall}_k}
+ {\mathrm{Precision}_k+\mathrm{Recall}_k},\\
+ \mathrm{Macro\ F1} &= \frac{F1_0+F1_1}{2}.
+\end{align}
+The ROC curve plots TPR against FPR as the threshold varies; AUC is computed from continuous
+probabilities or decision scores, not predicted 0/1 labels. AUC measures discrimination across
+thresholds, not Accuracy or probability calibration at the selected threshold.
+
+The project selects configurations by \textbf{validation Macro F1} to identify both classes. Ties
+are broken by ROC-AUC and then Accuracy. Per-class Precision, Recall, and class 1 F1 describe
+trade-offs rather than being combined into an arbitrary composite score. The notebook uses the estimators' default decision rules: a probability boundary of 0.5 for
+binary LR, DT, and MLP, and a decision-score boundary of 0 for Linear SVM. These boundaries are not
+tuned on the test set. For zero-denominator classification metrics, the implementation returns 0.
+\FloatBarrier
+
+\Needspace{10\baselineskip}
+\section{Validation Results and Model Selection}
+\Needspace{5\baselineskip}
+\subsection{Comparison Across Feature Groups}
+Table~\ref{tab:macro-grid} and Figure~\ref{fig:validation} compare the four algorithms using the
+same metric. Full Accuracy, Precision, Recall, F1, and AUC results for all 20 configurations are
+provided in Appendix~\ref{app:full}.
+\begin{table}[htbp]
+\centering
+\caption{Validation Macro F1 for four algorithms across five input feature groups.}\label{tab:macro-grid}
+\small
+\begin{tabularx}{\linewidth}{l*{5}{>{\centering\arraybackslash}X}}
+\toprule
+Model & Initial & Metadata & Country & Count & \makecell{Target\\Encoding} \\
+\midrule
+LR & 0.5380 & 0.5552 & 0.5624 & 0.5638 & 0.6597 \\
+DT & 0.5318 & 0.5303 & 0.5491 & 0.5855 & 0.6455 \\
+SVM & 0.5380 & 0.5555 & 0.5627 & 0.5643 & 0.6594 \\
+MLP & 0.3668 & 0.5232 & 0.5646 & 0.5653 & 0.6437 \\
+\bottomrule
+\end{tabularx}
+\source{Notebook, selection summary in Section 5.6}
+\end{table}
+\reportfigure[1.00]{07_so_sanh_macro_f1_validation_en.pdf}{Validation Macro F1 by algorithm and feature group; the dashed line is the baseline.}{fig:validation}{Notebook, Section 5.6}
+\FloatBarrier
+
+With the Initial feature group, age, year, and missingness indicators provide limited classification
+ability. LR and SVM have Macro F1 of about 0.5380 but Accuracy of about 0.5550, below the baseline's
+Accuracy. This is not a contradiction: the models identify additional class 0 ratings at the cost
+of some class 1 ratings. Initial MLP has class 1 Recall near 1 but class 0 Recall of only about
+0.0013, yielding Macro F1 of just 0.3668. These cases illustrate why configurations should not be
+selected using Accuracy or class 1 F1 alone.
+
+Metadata increases Macro F1 and AUC for LR/SVM, but does not improve every model or metric. For
+example, DT Macro F1 decreases slightly from 0.5318 to 0.5303. After adding Country, all four
+algorithms improve on Metadata in this split; the gain is larger for MLP than for the other models.
+These observations compare each algorithm with itself while its configuration is held fixed.
+
+\Needspace{5\baselineskip}
+\subsection{Effects of Count Features and Target Encoding}
+Count features increase DT Macro F1 from 0.5491 to 0.5855. The gains are smaller for LR/SVM.
+Although the Count group improves Macro F1 over Country, class 0 Recall decreases for some models;
+therefore, not every type of error improves.
+
+\begin{table}[htbp]
+\centering
+\caption{Logistic Regression performance as input feature groups are added sequentially.}\label{tab:lr-steps}
+\small
+\begin{tabularx}{\linewidth}{Yrrrr}
+\toprule
+Step & Accuracy & Macro F1 & $\Delta$ Macro F1 & AUC \\
+\midrule
+Initial $\to$ Metadata & 0.5578 & 0.5552 & +0.0172 & 0.5879 \\
+Metadata $\to$ Country & 0.5653 & 0.5624 & +0.0072 & 0.5971 \\
+Country $\to$ Count & 0.5670 & 0.5638 & +0.0014 & 0.6022 \\
+Count $\to$ Target Encoding & 0.6610 & 0.6597 & +0.0958 & 0.7338 \\
+\bottomrule
+\end{tabularx}
+\source{Notebook, delta tables; deltas computed before rounding}
+\end{table}
+
+Adding Target Encoding produces the clearest gains for LR/SVM among the tested groups. For LR,
+Macro F1 increases by about 0.0958 over Count, while Recall increases for both classes. Because only
+two ID-based rates are added at this step, the results provide predictive evidence in this split
+that rating tendencies from other training records add value. They do not measure causal effects
+of users or books, nor do they guarantee that the gain will persist under an ID-based or temporal split.
+
+\begin{table}[htbp]
+\centering
+\caption{Validation metrics for the Target Encoding feature group.}\label{tab:te-models}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\linewidth}{l*{6}{>{\centering\arraybackslash}X}}
+\toprule
+ & Acc. & Prec. 1 & Recall 0 & Recall 1 & Macro F1 & AUC \\
+\midrule
+LR & 0.6610 & 0.7443 & 0.7071 & 0.6271 & 0.6597 & 0.7338 \\
+SVM & 0.6607 & 0.7445 & 0.7080 & 0.6259 & 0.6594 & 0.7332 \\
+DT & 0.6480 & 0.7207 & 0.6653 & 0.6352 & 0.6455 & 0.7154 \\
+MLP & 0.6581 & 0.6875 & 0.5393 & 0.7455 & 0.6437 & 0.7116 \\
+\bottomrule
+\end{tabularx}
+\source{Notebook, Section 5.5.4}
+\end{table}
+
+\FloatBarrier
+\Needspace{8\baselineskip}
+\Needspace{5\baselineskip}
+\subsection{Configuration Selected by Validation}
+In the supplied notebook execution, all 20 model--feature-group configurations are ranked by
+validation Macro F1, ROC-AUC, and then Accuracy before the current test-evaluation cell is run.
+\textbf{Logistic Regression + Target Encoding} ranks first with a Macro F1 of \textbf{0.6597},
+Accuracy of \textbf{66.10\%}, and ROC-AUC of \textbf{0.7338}. Class 1 Precision is 0.7443; class 0
+and class 1 Recall are 0.7071 and 0.6271, respectively.
+
+SVM + Target Encoding is close, with a Macro F1 of about 0.6594. The difference from LR is small,
+so LR can be said to lead under the selected criterion in this split only; no significance test or
+multi-seed evaluation establishes a stable advantage. LR is retained for test evaluation without
+refitting on the test set or reselecting the model based on test results.
+\FloatBarrier
+
+\Needspace{10\baselineskip}
+\section{Test Evaluation and Generalization Scope}
+\Needspace{5\baselineskip}
+\subsection{Selected Model Compared with the Baseline}
+The pipeline fitted on the 70\% training partition and selected by validation is evaluated unchanged.
+Keeping this fitted pipeline preserves the experiment's declared protocol. A later refit on the
+combined training and validation partitions would require recomputing count tables, OOF features,
+and preprocessing parameters; its results would belong to a separate fitted model.
+Table~\ref{tab:test} reports results for 65,051 test ratings.
+\begin{table}[H]
+\centering
+\caption{Test results for Logistic Regression + Target Encoding and the baseline.}\label{tab:test}
+\begin{tabularx}{\linewidth}{Yrr}
+\toprule
+Metric & Selected model & Baseline \\
+\midrule
+Accuracy & 0.6565 & 0.5762 \\
+Class 1 Precision & 0.7407 & 0.5762 \\
+Class 0 Recall & 0.7041 & 0.0000 \\
+Class 0 F1 & 0.6347 & 0.0000 \\
+Class 1 Recall & 0.6215 & 1.0000 \\
+Class 1 F1 & 0.6758 & 0.7311 \\
+Macro F1 & 0.6553 & 0.3656 \\
+ROC-AUC & 0.7306 & 0.5000 \\
+\bottomrule
+\end{tabularx}
+\source{Notebook, Section 5.7; baseline fit on training data only}
+\end{table}
+
+Accuracy increases by 8.03 percentage points, Macro F1 by 0.2897, and ROC-AUC by 0.2306 over the
+baseline. Class 0 Recall increases from 0 to 0.7041, indicating that the model identifies many
+ratings in the 1--7 group. In exchange, class 1 Recall is lower than for the baseline that always
+predicts class 1; class 1 F1 also decreases from 0.7311 to 0.6758. Therefore, the model is not
+described as outperforming the baseline on every metric.
+
+Test Macro F1 is 0.6553, about 0.0044 below validation. This small gap in one split does not ensure
+stable out-of-sample or future performance. The test set was inspected in earlier project versions,
+so it is not a fully independent confirmation after development changes.
+
+\clearpage
+\subsection{Confusion Matrix and Error Types}
+\reportfigure[0.76]{08_confusion_matrix_test_en.pdf}{Test confusion matrix; rows show true labels and columns show predicted labels.}{fig:confusion}{Notebook, Section 5.7}
+Read Figure~\ref{fig:confusion} in the order of labels 0 and 1:
+\begin{itemize}
+  \item \textbf{TN = 19,412:} actual 1--7 ratings correctly predicted as class 0.
+  \item \textbf{FP = 8,156:} actual 1--7 ratings incorrectly predicted as high ratings.
+  \item \textbf{FN = 14,189:} actual 8--10 ratings missed and predicted as class 0.
+  \item \textbf{TP = 23,294:} actual 8--10 ratings correctly identified.
+\end{itemize}
+Of 31,450 ratings predicted as high, 23,294 are correct, corresponding to a class 1 Precision of
+about 74.07\%. The model identifies about 62.15\% of the 37,483 actual high ratings. Its class 0 F1 is
+0.6347, so Macro F1 is $(0.6347+0.6758)/2\approx0.6553$. If the priority
+is to find more high ratings, a threshold change could be investigated on development data; if the
+priority is higher precision among high-rating predictions, the cost of FP errors should be evaluated. This
+report neither specifies error costs nor adjusts the threshold, so it does not claim that the default
+threshold is optimal for practical use.
+\FloatBarrier
+
+\Needspace{0.70\textheight}
+\subsection{ROC and Discrimination Across Thresholds}
+\reportfigure[0.76]{09_roc_test_en.pdf}{ROC curve for the final model on the test set.}{fig:roc}{Notebook, Section 5.8}
+The ROC curve lies above the reference diagonal, and AUC is 0.7306, higher than the baseline value
+of 0.5. This provides evidence of the model's ability to discriminate between the two classes using
+continuous prediction scores rather than a single threshold. AUC does not indicate whether predicted
+probabilities are well calibrated; an AUC of 0.7306 does not mean that 73.06\% of predictions are correct.
+
+\Needspace{5\baselineskip}
+\subsection{Results by Seen and Unseen IDs}
+An ID is considered ``new'' if it has no ratings in the training data used to fit the model. These
+segments are reported only after model selection and are not used to select the model again.
+\begin{table}[htbp]
+\centering
+\caption{Test results by whether users and books appeared in the training set.}\label{tab:segments}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\linewidth}{Yrrrrrr}
+\toprule
+Segment & Ratings & Acc. & Recall 0 & Recall 1 & Macro F1 & AUC \\
+\midrule
+Seen user and book & 37,143 & 0.6644 & 0.6697 & 0.6609 & 0.6589 & 0.7320 \\
+New user, seen book & 5,513 & 0.5674 & 0.6677 & 0.4963 & 0.5673 & 0.6118 \\
+Seen user, new book & 19,908 & 0.6832 & 0.7390 & 0.6361 & 0.6832 & 0.7632 \\
+New user and book & 2,487 & 0.5219 & 0.9260 & 0.1097 & 0.4234 & 0.5935 \\
+\bottomrule
+\end{tabularx}
+\source{Notebook, Section 5.7; the four segments sum to 65,051 ratings}
+\end{table}
+
+The seen-user/seen-book segment contains 37,143 ratings and has a Macro F1 of 0.6589. When both IDs
+are new, Macro F1 falls to 0.4234 and class 1 Recall is 0.1097. In this segment, both target-encoding
+features fall back to the training prior and both count features are 0, leaving only metadata,
+age, country, and missingness information to distinguish records. This
+result cautions against generalizing aggregate performance to all new-user/new-book cases.
+
+The seen-user/new-book segment achieves a Macro F1 of 0.6832, higher than the segment where both
+are seen. The segments differ in composition, class distribution, and size, so this does not imply
+that ``new books improve the model.'' The current analysis is descriptive; general conclusions
+require an appropriate ID-based split and repeated evaluation.
+\FloatBarrier
+
+\Needspace{10\baselineskip}
+\section{Discussion, Applications, and Limitations}
+\Needspace{5\baselineskip}
+\subsection{Interpretation of Findings}
+The EDA shows substantial missingness in age, an uneven distribution of rating counts, and a
+difference between popularity and mean score. Basic demographic and metadata features do not
+provide strong discrimination. In these experiments, ID-based rating-tendency statistics produce
+the clearest gains for LR/SVM. This is predictive value under the current design, not evidence that
+any individual feature causes rating behavior.
+
+For applications, the model could support estimates of high-rating likelihood when user/book
+information and other ratings are available for lookup. Precision and Recall help inform trade-offs
+for a future objective. However, before using the model to rank recommendations, a ranking-evaluation
+design and data on candidate books that have not been rated are needed. The current metrics do not
+establish purchasing benefit, revenue, or business impact.
+
+\clearpage
+\subsection{Limitations to Consider}
+\begin{enumerate}
+  \item \textbf{Missingness and data quality:} age, publication year, and book metadata have
+  substantial missingness. Imputation and missingness indicators do not recover the original
+  information. Age/year thresholds are conventions that may mark some valid values as missing;
+  country parsed from Location may remain incorrect or inconsistent.
+  \item \textbf{Rating-level split:} the same users and books can occur across multiple splits.
+  The data have no timestamps to establish that all statistics would be available before a rating
+  in a real deployment. The results are not a pure cold-start or future-prediction evaluation.
+  \item \textbf{Label scope:} excluding zero-valued ratings matches the explicit-rating task
+  definition but limits conclusions to records scored from 1 to 10. This group may differ from the
+  population of users or books that have not been rated.
+  \item \textbf{Statistical inference:} EDA uses the full sample, and ratings may be dependent by
+  user or book. User-level rates have different precision because users contribute different
+  numbers of ratings; small $p$-values are not used to claim causality or stable population-level
+  differences.
+  \item \textbf{Selection and independence:} all 20 configurations share one validation split and
+  one seed, and hyperparameters are not exhaustively optimized. The test set was inspected in earlier
+  project versions, so the current evaluation is not a fully independent post-development confirmation.
+  \item \textbf{Distribution differences:} training uses OOF rates and counts with the current
+  rating removed, while validation/test use statistics from all training data. Smoothing reduces
+  but does not eliminate these differences. MLP stops based on training loss rather than directly
+  optimizing Macro F1, and class balancing differs across algorithms.
+\end{enumerate}
+
+\clearpage
+\section{Conclusion and Future Work}
+\Needspace{5\baselineskip}
+\subsection{Conclusion}
+The project covers the full workflow from relational data validation, cleaning, EDA, and label
+definition to feature engineering, training, and evaluation. The classification dataset contains
+433,671 ratings. Retaining ISBNs as strings, normalizing keys, preserving ratings without metadata,
+and fitting preprocessing on training data are important for consistency.
+
+Among the 20 evaluated configurations, \textbf{Logistic Regression + Target Encoding} is selected
+by validation Macro F1. On test, the model achieves \textbf{65.65\% Accuracy, 0.6553 Macro F1, and
+0.7306 ROC-AUC}. Compared with the baseline, it improves Accuracy and the equal-weighted summary of both classes,
+while class 1 Recall and F1 decrease. Thus the gain in Macro F1 reflects recovery of class 0 rather
+than an improvement on every measure. Weaker results when both IDs are new show why performance should be considered
+by use case rather than summarized by one aggregate score.
+
+\Needspace{5\baselineskip}
+\subsection{Next Steps}
+\begin{enumerate}
+  \item \textbf{Validate on new data:} prepare a holdout set that has never been inspected and
+  evaluate across additional seeds or with cross-validation. Within every fold, refit preprocessing,
+  count features, and OOF encodings using only that fold's fit partition.
+  \item \textbf{Choose a suitable generalization design:} try user-, book-, or time-based splits if
+  timestamps become available. Evaluate unseen-ID cases and different history densities separately.
+  \item \textbf{Optimize for the intended objective:} select hyperparameters and thresholds on
+  development data, and assess PR-AUC, probability calibration, FP/FN costs, and result variability.
+  \item \textbf{Improve representations:} normalize country values more carefully and consider book
+  title text, genres, or descriptions if suitable sources are available. Evaluate additions under a
+  consistent design.
+  \item \textbf{If moving to recommendations:} construct a candidate-book set and evaluate ranking
+  appropriately; do not treat the current classification results as evidence of recommendation quality.
+\end{enumerate}
+
+\clearpage
+\Needspace{10\baselineskip}
+\section*{Reproducibility and Data Provenance}
+\addcontentsline{toc}{section}{Reproducibility and Data Provenance}
+The supplied \nolinkurl{mid_term_code.ipynb} contains 70 cells, including 41 code cells with
+execution counts 1--41 and no saved error or warning outputs. The notebook was rerun from
+beginning to end in a fresh kernel, including all 20 model--feature-group configurations.
+Its saved tables are the source for the comparisons in this report. All 140 metric values in
+the complete validation table match the notebook to four decimal places; the test metrics,
+confusion-matrix counts, and ID-segment results agree as well. This verifies consistency with
+the supplied notebook; rerunning the same split does not create an independent holdout.
+
+\begin{table}[htbp]
+\centering
+\caption{Environment recorded in the notebook run used for this report.}\label{tab:environment}
+\begin{tabular}{ll}
+\toprule
+Component & Version \\
+\midrule
+Python & 3.14.8 \\
+numpy & 2.5.4 \\
+pandas & 3.1.0 \\
+matplotlib & 3.11.2 \\
+scipy & 1.18.1 \\
+scikit-learn & 1.9.1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The data-split seed is 56; the algorithm and OOF seeds are 42. To reproduce the analysis, place the
+three CSV files in \nolinkurl{DATA_SET/}, install numpy, pandas, matplotlib, scipy, scikit-learn,
+and Jupyter, open the notebook from the project root, and run all cells in a fresh kernel. The CSV files must
+be under \nolinkurl{DATA_SET/}, matching the notebook's \code{DATA\_DIR} setting.
+Results may differ slightly across library versions or numerical backends.
+
+\noindent\textbf{Notebook version fingerprint:} SHA-256 begins with
+\nolinkurl{27eb7d78452c15fc}. Table~\ref{tab:environment} records the environment printed by
+that notebook execution. The fingerprint identifies the exact notebook file supplied with this report.
+
+All nine figures have been regenerated with English labels. Descriptive charts use the supplied
+data; the validation chart uses the saved 20-configuration table; the confusion matrix and ROC use
+the selected LR predictions whose reported results match the notebook. Vector PDF charts are included in
+the source package. Tables use a period as the decimal separator and show metrics to four decimal
+places. Deltas use unrounded notebook values, so the final digit can differ from subtracting two
+rounded entries.
+
+\clearpage
+\begin{thebibliography}{9}
+\addcontentsline{toc}{section}{References}
+\bibitem{dataset}
+Möbius. \emph{Book Recommendation Dataset}. Kaggle.
+\url{https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset}.
+\bibitem{description}
+Möbius. \emph{Practice Recommendation Algorithms with Book Recommendation Dataset}.
+Description of Users, Books, Ratings, and the meaning of rating scores.
+\url{https://www.kaggle.com/discussions/general/202108}.
+\bibitem{metrics}
+Scikit-learn developers. \emph{Metrics and scoring: quantifying the quality of predictions},
+section on classification metrics.
+\url{https://scikit-learn.org/stable/modules/model_evaluation.html}.
+\bibitem{pitfalls}
+Scikit-learn developers. \emph{Common pitfalls and recommended practices}, section on data leakage.
+\url{https://scikit-learn.org/stable/common_pitfalls.html}.
+\bibitem{encoding}
+Scikit-learn developers. \emph{TargetEncoder}, documentation on cross-fitting, smoothing,
+and unseen categories.
+\url{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.TargetEncoder.html}.
+\bibitem{notebook}
+\emph{mid\_term\_code.ipynb}. Project source code and experiment outputs.
+\url{https://github.com/Bluenip/Data_analyst_python_midterm_project}.
+\end{thebibliography}
+
+\clearpage
+\appendix
+\Needspace{10\baselineskip}
+\section{Complete Validation Results for 20 Configurations}\label{app:full}
+LR: Logistic Regression; DT: Decision Tree; SVM: Linear SVM; MLP: multilayer perceptron.
+Acc.: Accuracy; P1: class 1 Precision; R0/R1: class 0/1 Recall; F1$_1$: class 1 F1;
+MF1: Macro F1; AUC: ROC-AUC. All 20 configurations use the same validation set; this table does
+not include test results.
+
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{L{2.4cm}lrrrrrrr}
+\caption{All validation metrics for five feature groups and four algorithms.}\label{tab:all-results}\\
+\toprule
+Group & Model & Acc. & P1 & R0 & R1 & F1$_1$ & MF1 & AUC \\
+\midrule
+\endfirsthead
+\multicolumn{9}{l}{\textit{Table \thetable{} (continued)}}\\
+\toprule
+Group & Model & Acc. & P1 & R0 & R1 & F1$_1$ & MF1 & AUC \\
+\midrule
+\endhead
+\midrule
+\multicolumn{9}{r}{\textit{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+Initial & LR & 0.5550 & 0.6066 & 0.4286 & 0.6479 & 0.6266 & 0.5380 & 0.5455 \\
+Initial & DT & 0.5319 & 0.6229 & 0.6085 & 0.4755 & 0.5393 & 0.5318 & 0.5586 \\
+Initial & SVM & 0.5550 & 0.6066 & 0.4286 & 0.6479 & 0.6266 & 0.5380 & 0.5455 \\
+Initial & MLP & 0.5764 & 0.5764 & 0.0013 & 0.9993 & 0.7311 & 0.3668 & 0.5516 \\
+Metadata & LR & 0.5578 & 0.6341 & 0.5684 & 0.5500 & 0.5891 & 0.5552 & 0.5879 \\
+Metadata & DT & 0.5318 & 0.6469 & 0.6937 & 0.4126 & 0.5038 & 0.5303 & 0.5793 \\
+Metadata & SVM & 0.5580 & 0.6345 & 0.5695 & 0.5496 & 0.5890 & 0.5555 & 0.5879 \\
+Metadata & MLP & 0.5896 & 0.6040 & 0.2555 & 0.8353 & 0.7011 & 0.5232 & 0.5976 \\
+Country & LR & 0.5653 & 0.6402 & 0.5717 & 0.5606 & 0.5978 & 0.5624 & 0.5971 \\
+Country & DT & 0.5491 & 0.6475 & 0.6465 & 0.4775 & 0.5496 & 0.5491 & 0.5920 \\
+Country & SVM & 0.5654 & 0.6407 & 0.5733 & 0.5596 & 0.5974 & 0.5627 & 0.5971 \\
+Country & MLP & 0.5928 & 0.6246 & 0.3992 & 0.7352 & 0.6754 & 0.5646 & 0.6082 \\
+Count & LR & 0.5670 & 0.6408 & 0.5690 & 0.5655 & 0.6008 & 0.5638 & 0.6022 \\
+Count & DT & 0.5882 & 0.6630 & 0.5990 & 0.5802 & 0.6189 & 0.5855 & 0.6324 \\
+Count & SVM & 0.5674 & 0.6414 & 0.5703 & 0.5653 & 0.6009 & 0.5643 & 0.6022 \\
+Count & MLP & 0.6056 & 0.6248 & 0.3554 & 0.7896 & 0.6976 & 0.5653 & 0.6333 \\
+Target Encoding & LR & 0.6610 & 0.7443 & 0.7071 & 0.6271 & 0.6807 & 0.6597 & 0.7338 \\
+Target Encoding & DT & 0.6480 & 0.7207 & 0.6653 & 0.6352 & 0.6753 & 0.6455 & 0.7154 \\
+Target Encoding & SVM & 0.6607 & 0.7445 & 0.7080 & 0.6259 & 0.6801 & 0.6594 & 0.7332 \\
+Target Encoding & MLP & 0.6581 & 0.6875 & 0.5393 & 0.7455 & 0.7153 & 0.6437 & 0.7116 \\
+\end{longtable}
+\endgroup
+
+\noindent\textit{Note:} Feature groups are ordered by the sequence in which inputs are added, not by
+final rank. The selected configuration has the highest MF1; ties are broken by AUC and then Acc.
+Each algorithm's configuration is held fixed across groups, but the project does not establish that
+any configuration is optimal across all representations, hyperparameters, or data splits.
+
+\end{document}
