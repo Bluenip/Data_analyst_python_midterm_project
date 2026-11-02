@@ -1,0 +1,9 @@
+# Các API trong notebook tương thích với các khoảng phiên bản này.
+# Phiên bản thực tế dùng để sinh output được in ở đầu notebook.
+numpy>=1.26,<3
+pandas>=2.2,<4
+matplotlib>=3.8,<4
+scipy>=1.12,<2
+scikit-learn>=1.5,<2
+ipykernel>=6.29,<8
+jupyterlab>=4.2,<5
