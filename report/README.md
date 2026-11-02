@@ -1,6 +1,6 @@
 # Báo cáo midterm — Phân loại đánh giá sách
 
-Đọc bản hoàn chỉnh tại [bao_cao_midterm.pdf](bao_cao_midterm.pdf). File [bao_cao_midterm.tex](bao_cao_midterm.tex) là mã nguồn; các thư mục `figures/`, `fonts/` và `neu_logo.png` là tài nguyên cần để biên dịch. Logo NEU do nhóm cung cấp.
+Đọc bản hoàn chỉnh tại [bao_cao_midterm.pdf](bao_cao_midterm.pdf). File [bao_cao_midterm.tex](bao_cao_midterm.tex) là mã nguồn; các thư mục `figures/`, `fonts/`, `neu_logo.png` và `fda_logo.png` là tài nguyên cần để biên dịch. Logo trường NEU và Khoa Khoa học Dữ liệu và Trí tuệ Nhân tạo (FDA) do nhóm cung cấp.
 
 Thành viên: Lương Văn Thái Tuấn — 11258665; Nguyễn Thị Khánh Hòa — 11253156. Giảng viên hỗ trợ: Tiến sĩ Trần Đức Minh.
 

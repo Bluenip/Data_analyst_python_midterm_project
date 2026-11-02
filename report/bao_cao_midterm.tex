@@ -102,9 +102,14 @@
   \thispagestyle{empty}
   \centering
   \vspace*{0.2cm}
-  \includegraphics[width=4.5cm]{neu_logo.png}\par
-  \vspace{0.25cm}
+  % Trim source padding so both circular emblems have the same visible size.
+  \includegraphics[height=2.8cm,trim=178bp 28bp 210bp 59bp,clip]{neu_logo.png}%
+  \hspace{1.2cm}%
+  \includegraphics[height=2.8cm,trim=8bp 22bp 5bp 21bp,clip]{fda_logo.png}\par
+  \vspace{0.35cm}
   {\coverfont\bfseries\large\color{navy}NATIONAL ECONOMICS UNIVERSITY\par}
+  \vspace{0.10cm}
+  {\sffamily\fontsize{10.5}{13}\selectfont\color{muted}FACULTY OF DATA SCIENCE AND ARTIFICIAL INTELLIGENCE\par}
   \vspace{0.35cm}
   {\sffamily\Large Data Analysis with Python\par}
 

@@ -49,6 +49,7 @@ Data_analyst_python_midterm_project/
     ├── bao_cao_midterm.tex
     ├── README.md
     ├── neu_logo.png
+    ├── fda_logo.png
     ├── figures/
     └── fonts/
 ```
