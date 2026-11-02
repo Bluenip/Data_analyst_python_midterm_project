@@ -1,0 +1,2 @@
+# PDFs are binary assets, including ASCII-encoded PDFs produced by ReportLab.
+*.pdf binary

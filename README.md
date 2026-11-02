@@ -5,6 +5,7 @@ Dự án phân tích dữ liệu sách, người dùng và các lượt đánh g
 - [Notebook phân tích và kết quả thực thi](mid_term_code.ipynb)
 - [Báo cáo phân tích PDF](report/bao_cao_midterm.pdf)
 - [Mã nguồn LaTeX](report/bao_cao_midterm.tex) và [hướng dẫn biên dịch](report/README.md)
+- [Slide thuyết trình PDF — 14 trang](slides/presentation_midterm.pdf) và [hướng dẫn tạo lại](slides/README.md)
 
 **Thành viên:** Lương Văn Thái Tuấn — 11258665; Nguyễn Thị Khánh Hòa — 11253156.
 
@@ -19,6 +20,8 @@ Dự án phân tích dữ liệu sách, người dùng và các lượt đánh g
 5. Chọn phương án trên validation, đánh giá trên test, so sánh baseline và phân tích giới hạn.
 
 Notebook chứa code, chú thích, biểu đồ và output đã lưu. Báo cáo trình bày phương pháp, diễn giải kết quả, chín hình và bảng so sánh đầy đủ 20 phương án.
+
+Bộ slide tóm tắt bài toán, dữ liệu, phương pháp, kết quả và giới hạn trong 14 trang, đáp ứng yêu cầu 10–15 slide của đề bài. PDF dùng để trình chiếu; mã nguồn Python được đính kèm để chỉnh sửa và tạo lại.
 
 ## Dữ liệu
 
@@ -44,14 +47,19 @@ Data_analyst_python_midterm_project/
 │   ├── Books.csv
 │   ├── Users.csv
 │   └── Ratings.csv
-└── report/
-    ├── bao_cao_midterm.pdf      # Báo cáo phân tích
-    ├── bao_cao_midterm.tex
-    ├── README.md
-    ├── neu_logo.png
-    ├── fda_logo.png
-    ├── figures/
-    └── fonts/
+├── report/
+│   ├── bao_cao_midterm.pdf      # Báo cáo phân tích
+│   ├── bao_cao_midterm.tex
+│   ├── README.md
+│   ├── neu_logo.png
+│   ├── fda_logo.png
+│   ├── figures/
+│   └── fonts/
+└── slides/
+    ├── presentation_midterm.pdf # 14 slide thuyết trình
+    ├── build_slides.py          # Mã nguồn tạo slide
+    ├── requirements.txt
+    └── README.md
 ```
 
 ## Chạy trên Jupyter
