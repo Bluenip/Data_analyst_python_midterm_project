@@ -100,49 +100,42 @@
 \hypersetup{pageanchor=false}
 \begin{titlepage}
   \thispagestyle{empty}
-  \begin{center}
-  \includegraphics[width=4.2cm]{neu_logo.png}\par
-  \vspace{0.2cm}
+  \centering
+  \vspace*{0.2cm}
+  \includegraphics[width=4.5cm]{neu_logo.png}\par
+  \vspace{0.25cm}
   {\coverfont\bfseries\large\color{navy}NATIONAL ECONOMICS UNIVERSITY\par}
-  \vspace{0.6cm}
-  {\sffamily\large\color{teal}MIDTERM PROJECT REPORT\par}
-  \vspace{0.25cm}
-  {\noindent\color{teal}\rule{\linewidth}{1.5pt}\par}
+  \vspace{0.35cm}
+  {\sffamily\Large Data Analysis with Python\par}
+
+  \vspace{1.25cm}
+  {\sffamily\Large\color{teal}MIDTERM PROJECT REPORT\par}
   \vspace{0.4cm}
+  {\color{teal}\rule{0.80\linewidth}{1pt}\par}
+  \vspace{0.7cm}
   {\sffamily\bfseries\Huge\color{navy}BOOK RATING\\[0.15cm]CLASSIFICATION\par}
-  \vspace{0.35cm}
+  \vspace{0.45cm}
   {\sffamily\Large Book Recommendation Dataset\par}
-  \vspace{0.2cm}
-  {\large Assignment 6 --- Classification\par}
-  \end{center}
-  \vspace{0.35cm}
-  \noindent\colorbox{light}{%
-    \parbox{0.93\linewidth}{\vspace{0.25cm}
-      \textbf{Research Question}\\[0.15cm]
-      Can a rating be classified as high (8--10) or not high (1--7) using user and book
-      information together with other ratings in the training set?
-      \vspace{0.25cm}}
-  }
-  \vspace{0.35cm}
-  \begin{center}
-  \begin{tabular}{ccc}
-    \textbf{433,671} & \textbf{0.6553} & \textbf{0.7306} \\
-    Explicit ratings & Test Macro F1 & Test ROC-AUC
-  \end{tabular}
-  \end{center}
   \vspace{0.25cm}
-  {\coverfont
-  \noindent\textbf{Students:}\par
-  \noindent Lương Văn Thái Tuấn -- 11258665\\
-  Nguyễn Thị Khánh Hòa -- 11253156\par
-  \medskip
-  \noindent\textbf{Supporting lecturer:} Dr. Trần Đức Minh\par}
+  {\large Assignment 6 --- Classification\par}
+
   \vfill
-  \noindent\textbf{Notebook:} \nolinkurl{mid_term_code.ipynb}\\
-  \textbf{Course:} Data Analysis with Python\\
-  \textbf{Selected model:} Logistic Regression + Target Encoding\\
-  \textbf{Repository:} \url{https://github.com/Bluenip/Data_analyst_python_midterm_project}\\
-  \textbf{Report date:} 2 November 2026
+  \begin{minipage}{0.85\linewidth}
+    \coverfont\large
+    \noindent\textbf{Students}\par
+    \smallskip
+    \begin{tabularx}{\linewidth}{@{}Yr@{}}
+      Lương Văn Thái Tuấn & 11258665 \\
+      Nguyễn Thị Khánh Hòa & 11253156 \\
+    \end{tabularx}
+    \vspace{0.6cm}
+    \par\noindent\textbf{Supporting lecturer}\par
+    \smallskip
+    \noindent Dr. Trần Đức Minh
+  \end{minipage}
+  \vfill
+  {\large 2 November 2026\par}
+  \vspace*{0.3cm}
 \end{titlepage}
 \hypersetup{pageanchor=true}
 \pagenumbering{roman}
@@ -732,7 +725,6 @@ MLP & 0.6581 & 0.6875 & 0.5393 & 0.7455 & 0.6437 & 0.7116 \\
 
 \FloatBarrier
 \Needspace{8\baselineskip}
-\Needspace{5\baselineskip}
 \subsection{Configuration Selected by Validation}
 In the supplied notebook execution, all 20 model--feature-group configurations are ranked by
 validation Macro F1, ROC-AUC, and then Accuracy before the current test-evaluation cell is run.
@@ -746,7 +738,7 @@ multi-seed evaluation establishes a stable advantage. LR is retained for test ev
 refitting on the test set or reselecting the model based on test results.
 \FloatBarrier
 
-\Needspace{10\baselineskip}
+\Needspace{0.60\textheight}
 \section{Test Evaluation and Generalization Scope}
 \Needspace{5\baselineskip}
 \subsection{Selected Model Compared with the Baseline}
@@ -785,7 +777,7 @@ Test Macro F1 is 0.6553, about 0.0044 below validation. This small gap in one sp
 stable out-of-sample or future performance. The test set was inspected in earlier project versions,
 so it is not a fully independent confirmation after development changes.
 
-\clearpage
+\Needspace{0.50\textheight}
 \subsection{Confusion Matrix and Error Types}
 \reportfigure[0.76]{08_confusion_matrix_test_en.pdf}{Test confusion matrix; rows show true labels and columns show predicted labels.}{fig:confusion}{Notebook, Section 5.7}
 Read Figure~\ref{fig:confusion} in the order of labels 0 and 1:
@@ -804,7 +796,7 @@ report neither specifies error costs nor adjusts the threshold, so it does not c
 threshold is optimal for practical use.
 \FloatBarrier
 
-\Needspace{0.70\textheight}
+\Needspace{0.50\textheight}
 \subsection{ROC and Discrimination Across Thresholds}
 \reportfigure[0.76]{09_roc_test_en.pdf}{ROC curve for the final model on the test set.}{fig:roc}{Notebook, Section 5.8}
 The ROC curve lies above the reference diagonal, and AUC is 0.7306, higher than the baseline value
@@ -862,7 +854,7 @@ for a future objective. However, before using the model to rank recommendations,
 design and data on candidate books that have not been rated are needed. The current metrics do not
 establish purchasing benefit, revenue, or business impact.
 
-\clearpage
+\Needspace{8\baselineskip}
 \subsection{Limitations to Consider}
 \begin{enumerate}
   \item \textbf{Missingness and data quality:} age, publication year, and book metadata have
@@ -888,7 +880,7 @@ establish purchasing benefit, revenue, or business impact.
   optimizing Macro F1, and class balancing differs across algorithms.
 \end{enumerate}
 
-\clearpage
+\Needspace{10\baselineskip}
 \section{Conclusion and Future Work}
 \Needspace{5\baselineskip}
 \subsection{Conclusion}
@@ -904,34 +896,34 @@ while class 1 Recall and F1 decrease. Thus the gain in Macro F1 reflects recover
 than an improvement on every measure. Weaker results when both IDs are new show why performance should be considered
 by use case rather than summarized by one aggregate score.
 
-\Needspace{5\baselineskip}
+\Needspace{0.34\textheight}
 \subsection{Next Steps}
 \begin{enumerate}
-  \item \textbf{Validate on new data:} prepare a holdout set that has never been inspected and
-  evaluate across additional seeds or with cross-validation. Within every fold, refit preprocessing,
-  count features, and OOF encodings using only that fold's fit partition.
-  \item \textbf{Choose a suitable generalization design:} try user-, book-, or time-based splits if
-  timestamps become available. Evaluate unseen-ID cases and different history densities separately.
-  \item \textbf{Optimize for the intended objective:} select hyperparameters and thresholds on
-  development data, and assess PR-AUC, probability calibration, FP/FN costs, and result variability.
-  \item \textbf{Improve representations:} normalize country values more carefully and consider book
-  title text, genres, or descriptions if suitable sources are available. Evaluate additions under a
-  consistent design.
-  \item \textbf{If moving to recommendations:} construct a candidate-book set and evaluate ranking
-  appropriately; do not treat the current classification results as evidence of recommendation quality.
+  \item \textbf{Validate on new data:} evaluate on an untouched holdout and additional seeds or
+  cross-validation. Refit preprocessing, count features, and OOF encodings within each fold.
+  \item \textbf{Match the generalization design:} test user- or book-based splits, or time-based
+  splits if timestamps become available; report performance by unseen-ID status and history density.
+  \item \textbf{Optimize for the intended objective:} tune hyperparameters and thresholds on
+  development data; assess PR-AUC, calibration, FP/FN costs, and variability across splits.
+  \item \textbf{Improve representations:} refine country normalization and test book-title text,
+  genres, or descriptions under the same evaluation protocol.
+  \item \textbf{Evaluate recommendations separately:} define candidate books and assess ranking
+  metrics in addition to classification performance.
 \end{enumerate}
 
-\clearpage
-\Needspace{10\baselineskip}
+\FloatBarrier
+\Needspace{0.45\textheight}
 \section*{Reproducibility and Data Provenance}
 \addcontentsline{toc}{section}{Reproducibility and Data Provenance}
-The supplied \nolinkurl{mid_term_code.ipynb} contains 70 cells, including 41 code cells with
-execution counts 1--41 and no saved error or warning outputs. The notebook was rerun from
-beginning to end in a fresh kernel, including all 20 model--feature-group configurations.
-Its saved tables are the source for the comparisons in this report. All 140 metric values in
-the complete validation table match the notebook to four decimal places; the test metrics,
-confusion-matrix counts, and ID-segment results agree as well. This verifies consistency with
-the supplied notebook; rerunning the same split does not create an independent holdout.
+The analysis is implemented in \nolinkurl{mid_term_code.ipynb}, available with the data and
+report source in the \href{https://github.com/Bluenip/Data_analyst_python_midterm_project}{project repository}.
+The tables and figures in this report agree with the saved notebook results. All metrics are
+reported to four decimal places; deltas are calculated before rounding.
+
+To reproduce the analysis, install the packages in \nolinkurl{requirements.txt}, place the three
+CSV files under \nolinkurl{DATA_SET/}, and run the notebook from the project root in a fresh kernel.
+The data-split seed is 56; the model and OOF seeds are 42. Table~\ref{tab:environment} records the
+execution environment. Minor numerical differences may occur across library versions or backends.
 
 \begin{table}[htbp]
 \centering
@@ -950,24 +942,15 @@ scikit-learn & 1.9.1 \\
 \end{tabular}
 \end{table}
 
-The data-split seed is 56; the algorithm and OOF seeds are 42. To reproduce the analysis, place the
-three CSV files in \nolinkurl{DATA_SET/}, install numpy, pandas, matplotlib, scipy, scikit-learn,
-and Jupyter, open the notebook from the project root, and run all cells in a fresh kernel. The CSV files must
-be under \nolinkurl{DATA_SET/}, matching the notebook's \code{DATA\_DIR} setting.
-Results may differ slightly across library versions or numerical backends.
+The supplied notebook has SHA-256 prefix \nolinkurl{27eb7d78452c15fc}.
+Reproducing this run uses the same previously inspected test split and does not provide an
+independent holdout evaluation.
 
-\noindent\textbf{Notebook version fingerprint:} SHA-256 begins with
-\nolinkurl{27eb7d78452c15fc}. Table~\ref{tab:environment} records the environment printed by
-that notebook execution. The fingerprint identifies the exact notebook file supplied with this report.
-
-All nine figures have been regenerated with English labels. Descriptive charts use the supplied
-data; the validation chart uses the saved 20-configuration table; the confusion matrix and ROC use
-the selected LR predictions whose reported results match the notebook. Vector PDF charts are included in
-the source package. Tables use a period as the decimal separator and show metrics to four decimal
-places. Deltas use unrounded notebook values, so the final digit can differ from subtracting two
-rounded entries.
-
-\clearpage
+\FloatBarrier
+\Needspace{0.40\textheight}
+\begingroup
+\small
+\setstretch{1.0}
 \begin{thebibliography}{9}
 \addcontentsline{toc}{section}{References}
 \bibitem{dataset}
@@ -992,6 +975,7 @@ and unseen categories.
 \emph{mid\_term\_code.ipynb}. Project source code and experiment outputs.
 \url{https://github.com/Bluenip/Data_analyst_python_midterm_project}.
 \end{thebibliography}
+\endgroup
 
 \clearpage
 \appendix
