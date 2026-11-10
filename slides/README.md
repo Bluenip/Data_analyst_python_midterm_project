@@ -1,8 +1,8 @@
 # Slide thuyết trình midterm
 
-[**presentation_midterm.pdf**](presentation_midterm.pdf) gồm **14 slide**, đáp ứng yêu cầu 10–15 slide trong `../Mid-Term.pdf`. Nội dung tiếng Anh thống nhất với báo cáo; tên thành viên và giảng viên giữ dấu tiếng Việt.
+[**presentation_midterm.pdf**](presentation_midterm.pdf) gồm **15 slide**, đáp ứng yêu cầu 10–15 slide trong `../Mid-Term.pdf`. Nội dung tiếng Anh thống nhất với báo cáo; tên thành viên và giảng viên giữ dấu tiếng Việt.
 
-Slide tóm tắt bài toán, ba bảng dữ liệu, làm sạch, EDA, thiết kế thí nghiệm, năm nhóm đặc trưng, bốn thuật toán, kết quả validation/test, baseline, confusion matrix, ROC, nhóm ID mới và các giới hạn. Số liệu lấy từ output đã lưu trong `../mid_term_code.ipynb` và `../report/bao_cao_midterm.tex`; biểu đồ dùng lại các tệp trong `../report/figures/`.
+Slide tóm tắt bài toán, ba bảng dữ liệu, làm sạch, EDA, ma trận tương quan, thiết kế thí nghiệm, năm nhóm đặc trưng, bốn thuật toán, kết quả validation/test, baseline, confusion matrix, ROC, nhóm ID mới và các giới hạn. Số liệu lấy từ output đã lưu trong `../mid_term_code.ipynb` và `../report/bao_cao_midterm.tex`; biểu đồ dùng lại các tệp trong `../report/figures/`.
 
 ## Tạo lại PDF
 
@@ -19,4 +19,4 @@ Sau khi thay đổi notebook, đối chiếu lại các số liệu trong nguồ
 
 ## Trình chiếu
 
-Mở PDF ở chế độ toàn màn hình. Thứ tự slide: bài toán → dữ liệu → làm sạch → EDA → thiết kế → đặc trưng → mô hình → validation → test → lỗi/ROC → nhóm ID → kết luận. Phần giới hạn nêu rõ test đã được xem trong quá trình phát triển và chưa đánh giá chất lượng xếp hạng gợi ý.
+Mở PDF ở chế độ toàn màn hình. Thứ tự slide: bài toán → dữ liệu → làm sạch → EDA → tương quan → thiết kế → đặc trưng → mô hình → validation → test → lỗi/ROC → nhóm ID → kết luận. Phần giới hạn nêu rõ test đã được xem trong quá trình phát triển và chưa đánh giá chất lượng xếp hạng gợi ý.

@@ -5,7 +5,7 @@ Dự án phân tích dữ liệu sách, người dùng và các lượt đánh g
 - [Notebook phân tích và kết quả thực thi](mid_term_code.ipynb)
 - [Báo cáo phân tích PDF](report/bao_cao_midterm.pdf)
 - [Mã nguồn LaTeX](report/bao_cao_midterm.tex) và [hướng dẫn biên dịch](report/README.md)
-- [Slide thuyết trình PDF — 14 trang](slides/presentation_midterm.pdf) và [hướng dẫn tạo lại](slides/README.md)
+- [Slide thuyết trình PDF — 15 trang](slides/presentation_midterm.pdf) và [hướng dẫn tạo lại](slides/README.md)
 
 **Thành viên:** Lương Văn Thái Tuấn — 11258665; Nguyễn Thị Khánh Hòa — 11253156.
 
@@ -19,9 +19,9 @@ Dự án phân tích dữ liệu sách, người dùng và các lượt đánh g
 4. Xây dựng đặc trưng và so sánh bốn thuật toán phân loại qua năm nhóm đầu vào.
 5. Chọn phương án trên validation, đánh giá trên test, so sánh baseline và phân tích giới hạn.
 
-Notebook chứa code, chú thích, biểu đồ và output đã lưu. Báo cáo trình bày phương pháp, diễn giải kết quả, chín hình và bảng so sánh đầy đủ 20 phương án.
+Notebook chứa code, chú thích, biểu đồ và output đã lưu. Báo cáo trình bày phương pháp, diễn giải kết quả, mười hình và bảng so sánh đầy đủ 20 phương án.
 
-Bộ slide tóm tắt bài toán, dữ liệu, phương pháp, kết quả và giới hạn trong 14 trang, đáp ứng yêu cầu 10–15 slide của đề bài. PDF dùng để trình chiếu; mã nguồn Python được đính kèm để chỉnh sửa và tạo lại.
+Bộ slide tóm tắt bài toán, dữ liệu, phương pháp, kết quả và giới hạn trong 15 trang, đáp ứng yêu cầu 10–15 slide của đề bài. PDF dùng để trình chiếu; mã nguồn Python được đính kèm để chỉnh sửa và tạo lại.
 
 ## Dữ liệu
 
@@ -56,7 +56,7 @@ Data_analyst_python_midterm_project/
 │   ├── figures/
 │   └── fonts/
 └── slides/
-    ├── presentation_midterm.pdf # 14 slide thuyết trình
+    ├── presentation_midterm.pdf # 15 slide thuyết trình
     ├── build_slides.py          # Mã nguồn tạo slide
     ├── requirements.txt
     └── README.md
@@ -76,18 +76,13 @@ python -m jupyterlab
 
 Trên Windows, kích hoạt môi trường bằng `.venv\Scripts\activate`.
 
-Mở `mid_term_code.ipynb`, chọn kernel **Python (Book Midterm)** và chạy **Restart Kernel → Run All**. Notebook có 41 cell code và huấn luyện 20 phương án; thời gian chạy tùy cấu hình máy. Thư mục làm việc phải chứa `DATA_SET`; nếu dữ liệu ở nơi khác, sửa `DATA_DIR` trong ô thiết lập. Phiên bản thư viện thực tế được in ở đầu notebook.
+Mở `mid_term_code.ipynb`, chọn kernel **Python (Book Midterm)** và chạy **Restart Kernel → Run All**. Notebook có 42 cell code và huấn luyện 20 phương án; thời gian chạy tùy cấu hình máy. Thư mục làm việc phải chứa `DATA_SET`; nếu dữ liệu ở nơi khác, sửa `DATA_DIR` trong ô thiết lập. Phiên bản thư viện thực tế được in ở đầu notebook.
 
 ## Chạy trên Google Colab
 
-Mở notebook từ GitHub trong Colab. Thêm một ô thiết lập ở đầu notebook để tải dữ liệu vào runtime:
+Mở notebook từ GitHub trong Colab (**File → Open notebook → GitHub**, dán link repository) rồi chọn **Runtime → Run all**. Ô thiết lập đầu notebook tự nhận biết Colab: nếu chưa có `DATA_SET`, notebook clone repository vào `/content/Data_analyst_python_midterm_project` (khoảng 100 MB) và đọc dữ liệu từ đó. Lệnh clone chỉ chạy một lần cho mỗi runtime.
 
-```python
-!git clone https://github.com/Bluenip/Data_analyst_python_midterm_project.git
-%cd Data_analyst_python_midterm_project
-```
-
-Sau đó chạy các ô phân tích. Lệnh clone chỉ cần chạy một lần cho mỗi runtime; nếu thư mục đã có, chỉ cần chuyển vào thư mục đó. Nếu môi trường thiếu thư viện, cài bằng `pip install -r requirements.txt` rồi khởi động lại runtime khi cần. Có thể đặt `DATA_DIR` thành đường dẫn tuyệt đối tới dữ liệu trên Google Drive.
+Các thư viện cần dùng đã có sẵn trên Colab; nếu thiếu, cài bằng `pip install -r requirements.txt` rồi khởi động lại runtime. Có thể đặt `DATA_DIR` thành đường dẫn tuyệt đối tới dữ liệu trên Google Drive.
 
 ## Thiết kế thí nghiệm
 

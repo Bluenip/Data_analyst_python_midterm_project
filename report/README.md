@@ -26,10 +26,10 @@ Có thể dùng Tectonic thay cho hai lệnh XeLaTeX:
 tectonic bao_cao_midterm.tex
 ```
 
-Các font dùng cho nội dung và tên tiếng Việt được đính kèm trong `fonts/`, cùng giấy phép. Chín hình có bản PDF vector và PNG; LaTeX dùng bản PDF. Biên dịch báo cáo không yêu cầu chạy lại Python.
+Các font dùng cho nội dung và tên tiếng Việt được đính kèm trong `fonts/`, cùng giấy phép. Mười hình có bản PDF vector và PNG; LaTeX dùng bản PDF. Biên dịch báo cáo không yêu cầu chạy lại Python.
 
 ## Đồng bộ với notebook
 
-Báo cáo dùng output của `../mid_term_code.ipynb`: 70 cell, gồm 41 cell code đã chạy tuần tự, so sánh bốn thuật toán trên năm nhóm đặc trưng. Phụ lục trình bày đủ 20 phương án; các chỉ số khớp output notebook tới bốn chữ số thập phân.
+Báo cáo dùng output của `../mid_term_code.ipynb`: 72 cell, gồm 42 cell code đã chạy tuần tự, so sánh bốn thuật toán trên năm nhóm đặc trưng. Phụ lục trình bày đủ 20 phương án; các chỉ số khớp output notebook tới bốn chữ số thập phân.
 
 Khi sửa và chạy lại notebook, cần kiểm tra lại các bảng, hình, phiên bản môi trường và mã SHA-256 trong phần Reproducibility của báo cáo. `../Mid-Term.pdf` là đề bài, tách biệt với PDF phân tích này.

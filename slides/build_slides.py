@@ -1,4 +1,4 @@
-"""Build the 14-slide midterm presentation from the reviewed analysis snapshot.
+"""Build the 15-slide midterm presentation from the reviewed analysis snapshot.
 
 Run from any directory: python slides/build_slides.py
 Uses the existing report figures and bundled cover fonts; never trains a model.
@@ -25,6 +25,7 @@ BG = colors.HexColor("#F7F9FB")
 PALE = colors.HexColor("#E5F1F2")
 WHITE = colors.white
 GOLD = colors.HexColor("#E8B86D")
+TOTAL = 15
 FONT = "Helvetica"
 BOLD = "Helvetica-Bold"
 pdfmetrics.registerFont(TTFont("Names", str(ROOT / "report/fonts/LiberationSerif-Regular.ttf")))
@@ -32,7 +33,7 @@ pdfmetrics.registerFont(TTFont("NamesBold", str(ROOT / "report/fonts/LiberationS
 c = canvas.Canvas(str(OUT), pagesize=(W, H), invariant=1)
 c.setTitle("Book Rating Classification — Midterm Presentation")
 c.setAuthor("Lương Văn Thái Tuấn; Nguyễn Thị Khánh Hòa")
-c.setSubject("Assignment 6 | Data Analysis with Python | 14 slides")
+c.setSubject(f"Assignment 6 | Data Analysis with Python | {TOTAL} slides")
 c.setCreator("slides/build_slides.py (ReportLab)")
 page_no = 0
 
@@ -91,7 +92,7 @@ def frame(title, section, source):
     rect(44, 437, 872, 1, colors.HexColor("#D9E2E9"))
     text("BOOK RATING CLASSIFICATION", 44, 19, 8, MUTED)
     text(source, 245, 19, 8, MUTED)
-    text(f"{page_no:02d} / 14", 871, 19, 9, MUTED)
+    text(f"{page_no:02d} / {TOTAL}", 871, 19, 9, MUTED)
 
 
 def end():
@@ -146,11 +147,11 @@ text("Lương Văn Thái Tuấn — 11258665", 51, 124, 19, WHITE, font="Names")
 text("Nguyễn Thị Khánh Hòa — 11253156", 51, 98, 19, WHITE, font="Names")
 text("Supporting lecturer: Dr. Trần Đức Minh", 51, 64, 18, WHITE, font="Names")
 text("2 NOVEMBER 2026", 770, 52, 11, WHITE, True)
-text("01 / 14", 871, 19, 9, WHITE)
+text(f"01 / {TOTAL}", 871, 19, 9, WHITE)
 end()
 
 # 02 | Problem
-frame("Predict the rating class, one rating at a time", "01 / Problem", "Source: notebook §0; report §1")
+frame("Predict the rating class, one rating at a time", "01 / Problem", "Source: notebook intro; report §1")
 card(44, 270, 280, "8–10", "Class 1: high rating", "Threshold selected by the group")
 card(340, 270, 280, "1–7", "Class 0: other ratings", "Does not mean the reader dislikes it")
 card(636, 270, 280, "0", "Implicit feedback", "Retained for activity summaries", color=MUTED)
@@ -214,7 +215,18 @@ rect(44, 59, 872, 52, PALE, 6)
 paragraph("Repeated users and books violate simple independence assumptions; EDA is descriptive, not causal evidence.", 60, 98, 840, 17, TEAL, max_height=44)
 end()
 
-# 07 | Split
+# 07 | Correlation matrix
+frame("No single numeric variable separates the classes", "04 / Exploration", "Source: notebook §4.9; report §4.5")
+photo("report/figures/10_tuong_quan_spearman_en.png", 34, 52, 540, 372)
+bullets([
+    "Spearman rho: rank-based, robust to the highly skewed rating counts.",
+    "Every |rho| with <b>liked</b> is at most 0.08: Age missing -0.076, user count 0.075, book count 0.072.",
+    "Strongest input pair: book count vs Year missing (-0.26); no serious multicollinearity.",
+    "Weak one-to-one links do not rule out joint value; feature groups are chosen by validation."
+], 598, 399, 318, 16, 14)
+end()
+
+# 08 | Split
 frame("Separate fitting, selection and evaluation", "05 / Experiment design", "Source: notebook §5.2–5.5; report §5")
 card(44, 266, 280, "70%", "Train: 303,569", "Fit preprocessing and estimators")
 card(340, 266, 280, "15%", "Validation: 65,051", "Select one of 20 configurations")
@@ -227,7 +239,7 @@ bullets([
 ], 52, 231, 852, 18, 11)
 end()
 
-# 08 | Features
+# 09 | Features
 frame("Five cumulative feature groups", "06 / Feature engineering", "Source: notebook §5.1–5.5; report §5.1, §5.3")
 table(["Group", "New information", "Inputs"], [
     ["Initial", "Age, publication year, missingness flags", "4"],
@@ -240,7 +252,7 @@ paragraph("Book-Rating is excluded from X. User-ID and ISBN are lookup keys, not
 paragraph("Unseen IDs: count = 0; target rate = training prior. OOF excludes each row’s own label.", 57, 67, 842, 15, MUTED)
 end()
 
-# 09 | Algorithms and selection
+# 10 | Algorithms and selection
 frame("20 configurations; one selection rule", "07 / Modeling", "Source: notebook §5.3–5.6; report §6")
 table(["Algorithm", "Fixed configuration across feature groups"], [
     ["Logistic Regression", "Balanced class weights; max_iter = 1000"],
@@ -253,7 +265,7 @@ paragraph("Select the highest validation Macro F1", 65, 144, 825, 23, WHITE, Tru
 paragraph("Tie-break: ROC-AUC, then Accuracy. Baseline: always predict the majority class.", 65, 106, 825, 17, colors.HexColor("#CEE0EA"))
 end()
 
-# 10 | Validation
+# 11 | Validation
 frame("Target encoding gives the clearest gains", "08 / Validation results", "Source: notebook §5.6; report §7")
 photo("report/figures/07_so_sanh_macro_f1_validation_en.png", 35, 99, 620, 319)
 text("0.6597", 675, 356, 39, TEAL, True)
@@ -265,7 +277,7 @@ bullets([
 paragraph("Selected across all 20 configurations using the same validation criterion.", 58, 73, 843, 18, TEAL, True)
 end()
 
-# 11 | Test comparison
+# 12 | Test comparison
 frame("Better recognition of both classes, with trade-offs", "09 / Test results", "Source: notebook §5.7; report §8.1")
 table(["Metric", "LR + Target Encoding", "Baseline"], [
     ["Accuracy", "0.6565", "0.5762"],
@@ -279,7 +291,7 @@ text("+0.2897 Macro F1", 504, 124, 24, TEAL, True)
 paragraph("Class 1 F1 falls versus the baseline. The selected model does not lead on every metric.", 59, 91, 846, 17, MUTED)
 end()
 
-# 12 | Confusion and ROC
+# 13 | Confusion and ROC
 frame("Errors and discrimination on 65,051 test ratings", "09 / Test results", "Source: notebook §5.7–5.8; report §8.2–8.3")
 photo("report/figures/08_confusion_matrix_test_en.png", 42, 140, 420, 279)
 photo("report/figures/09_roc_test_en.png", 496, 140, 420, 279)
@@ -287,7 +299,7 @@ paragraph("<b>High-rating precision: 74.07%</b><br/>23,294 correct out of 31,450
 paragraph("<b>ROC-AUC: 0.7306</b><br/>Discrimination across thresholds; not Accuracy or a calibration measure.", 503, 117, 410, 17)
 end()
 
-# 13 | Segments
+# 14 | Segments
 frame("Aggregate performance does not cover every ID group", "10 / Generalization", "Source: notebook §5.7; report §8.4")
 table(["Test segment", "Ratings", "Macro F1", "Recall 1"], [
     ["Seen user, seen book", "37,143", "0.6589", "0.6609"],
@@ -301,7 +313,7 @@ bullets([
 ], 54, 134, 848, 18, 13)
 end()
 
-# 14 | Conclusion
+# 15 | Conclusion
 frame("A useful signal, with a clear next validation step", "11 / Conclusions", "Source: notebook §6; report §9–10")
 rect(44, 249, 422, 165, WHITE, 8)
 rect(485, 249, 431, 165, WHITE, 8)
@@ -316,11 +328,11 @@ bullets([
     "EDA used the full sample; test was already viewed during development."
 ], 505, 358, 388, 18, 13)
 paragraph("Next: a fresh holdout, user/book or time-based evaluation, repeated splits, and ranking metrics before recommendation use.", 59, 217, 842, 20, INK, True)
-paragraph("Materials: notebook + analysis report + this 14-slide presentation", 59, 117, 842, 18, TEAL)
+paragraph("Materials: notebook + analysis report + this 15-slide presentation", 59, 117, 842, 18, TEAL)
 url="https://github.com/Bluenip/Data_analyst_python_midterm_project"
 text("github.com/Bluenip/Data_analyst_python_midterm_project", 59, 62, 15, MUTED)
 c.linkURL(url, (59, 56, 760, 78), relative=0)
 end()
-assert page_no == 14
+assert page_no == TOTAL
 c.save()
 print(f"Built {page_no} slides: {OUT}")

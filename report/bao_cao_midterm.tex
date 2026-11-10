@@ -484,6 +484,32 @@ These results motivate testing activity counts and ID-based statistics. Full-sam
 are not used directly as model inputs; features for modeling are recomputed from the training set.
 \FloatBarrier
 
+\Needspace{5\baselineskip}
+\subsection{Correlation Matrix of Numeric Variables}
+Figure~\ref{fig:corr} reports a Spearman correlation matrix for the numeric candidate inputs and
+the target over the 433,671 explicit ratings. Spearman's $\rho$ is used instead of Pearson's because
+user and book rating counts are extremely right-skewed; a rank-based coefficient is less sensitive to
+the few very active users and very popular books. \code{Book-Rating} is excluded because
+\code{liked} is defined from it. The two count variables are computed on the full classification
+dataset for exploration only; the count features used for modeling are recomputed from the training
+set (Section~5.3). Missing values are dropped pairwise, so Age uses 303,100 ratings and publication
+year 378,036.
+\reportfigure[0.86]{10_tuong_quan_spearman_en.pdf}{Spearman correlation matrix among numeric variables and the target \code{liked}; ``---'' marks undefined pairs.}{fig:corr}{Notebook, Section 4.9}
+
+All coefficients with \code{liked} are small: the largest in magnitude are Age missing
+($\rho=-0.0757$), user rating count ($0.0753$), and book rating count ($0.0717$), while Age
+($0.0316$) and publication year ($0.0153$) are weaker. No single numeric variable therefore separates
+the two classes on its own. Among the inputs, the strongest pair is book rating count and Year
+missing ($\rho=-0.2565$): books without a valid publication year tend to be rated less often. No input
+pair is strong enough to suggest serious multicollinearity. Cells marked ``---'' are undefined because
+a missing-value flag is constant whenever its source variable is observed.
+
+These are univariate, monotonic associations. A weak coefficient does not rule out usefulness in
+combination with other features, and a stronger one does not imply causation. The matrix motivates
+keeping the missing-value flags and testing ID-based statistics, but feature groups are still
+selected by validation performance (Section~7).
+\FloatBarrier
+
 \Needspace{10\baselineskip}
 \section{Feature Engineering and Data-Split Design}
 \Needspace{5\baselineskip}
@@ -937,7 +963,7 @@ execution environment. Minor numerical differences may occur across library vers
 \toprule
 Component & Version \\
 \midrule
-Python & 3.14.8 \\
+Python & 3.14.9 \\
 numpy & 2.5.4 \\
 pandas & 3.1.0 \\
 matplotlib & 3.11.2 \\
@@ -947,7 +973,7 @@ scikit-learn & 1.9.1 \\
 \end{tabular}
 \end{table}
 
-The supplied notebook has SHA-256 prefix \nolinkurl{27eb7d78452c15fc}.
+The supplied notebook has SHA-256 prefix \nolinkurl{5a0991ddba42d256}.
 Reproducing this run uses the same previously inspected test split and does not provide an
 independent holdout evaluation.
 
