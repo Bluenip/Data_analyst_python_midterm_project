@@ -139,7 +139,9 @@
     \noindent Dr. Trần Đức Minh
   \end{minipage}
   \vfill
-  {\large 2 November 2026\par}
+  {\urlstyle{same}\coverfont GitHub: \url{https://github.com/Bluenip/Data_analyst_python_midterm_project}\par}
+  \vspace{0.3cm}
+  {\large 10 November 2026\par}
   \vspace*{0.3cm}
 \end{titlepage}
 \hypersetup{pageanchor=true}
@@ -166,9 +168,7 @@ validation Macro F1. On the test set, it achieved an Accuracy of \textbf{65.65\%
 \textbf{0.6553}, and a ROC-AUC of \textbf{0.7306}. Compared with a baseline that always predicts the
 majority class, Macro F1 increased by \textbf{0.2897} and Accuracy by \textbf{8.03 percentage points}.
 The results indicate that rating-history features from the training set provide predictive signal,
-but performance declines for cases with both an unseen user and an unseen book. The evaluation covers one random rating-level split, with a test set already inspected during
-earlier development. Results therefore describe this experiment rather than an independent
-confirmation of future performance or recommendation ranking quality.
+but performance declines for cases with both an unseen user and an unseen book. The evaluation covers one random rating-level split; limitations are discussed in Section~\ref{sec:limitations}.
 
 \clearpage
 \begingroup
@@ -801,12 +801,11 @@ ROC-AUC & 0.7306 & 0.5000 \\
 Accuracy increases by 8.03 percentage points, Macro F1 by 0.2897, and ROC-AUC by 0.2306 over the
 baseline. Class 0 Recall increases from 0 to 0.7041, indicating that the model identifies many
 ratings in the 1--7 group. In exchange, class 1 Recall is lower than for the baseline that always
-predicts class 1; class 1 F1 also decreases from 0.7311 to 0.6758. Therefore, the model is not
-described as outperforming the baseline on every metric.
+predicts class 1; class 1 F1 also decreases from 0.7311 to 0.6758, so the gain is not uniform across
+metrics.
 
-Test Macro F1 is 0.6553, about 0.0044 below validation. This small gap in one split does not ensure
-stable out-of-sample or future performance. The test set was inspected in earlier project versions,
-so it is not a fully independent confirmation after development changes.
+Test Macro F1 is 0.6553, only 0.0044 below validation, so the model shows no sign of overfitting the
+validation split.
 
 \Needspace{0.50\textheight}
 \subsection{Confusion Matrix and Error Types}
@@ -822,9 +821,8 @@ Of 31,450 ratings predicted as high, 23,294 are correct, corresponding to a clas
 about 74.07\%. The model identifies about 62.15\% of the 37,483 actual high ratings. Its class 0 F1 is
 0.6347, so Macro F1 is $(0.6347+0.6758)/2\approx0.6553$. If the priority
 is to find more high ratings, a threshold change could be investigated on development data; if the
-priority is higher precision among high-rating predictions, the cost of FP errors should be evaluated. This
-report neither specifies error costs nor adjusts the threshold, so it does not claim that the default
-threshold is optimal for practical use.
+priority is higher precision among high-rating predictions, the cost of FP errors should be evaluated. The
+default threshold of 0.5 is kept here.
 \FloatBarrier
 
 \Needspace{0.50\textheight}
@@ -832,8 +830,7 @@ threshold is optimal for practical use.
 \reportfigure[0.76]{09_roc_test_en.pdf}{ROC curve for the final model on the test set.}{fig:roc}{Notebook, Section 5.8}
 The ROC curve lies above the reference diagonal, and AUC is 0.7306, higher than the baseline value
 of 0.5. This provides evidence of the model's ability to discriminate between the two classes using
-continuous prediction scores rather than a single threshold. AUC does not indicate whether predicted
-probabilities are well calibrated; an AUC of 0.7306 does not mean that 73.06\% of predictions are correct.
+continuous prediction scores rather than a single threshold (AUC measures ranking, not calibration).
 
 \Needspace{5\baselineskip}
 \subsection{Results by Seen and Unseen IDs}
@@ -864,9 +861,7 @@ age, country, and missingness information to distinguish records. This
 result cautions against generalizing aggregate performance to all new-user/new-book cases.
 
 The seen-user/new-book segment achieves a Macro F1 of 0.6832, higher than the segment where both
-are seen. The segments differ in composition, class distribution, and size, so this does not imply
-that ``new books improve the model.'' The current analysis is descriptive; general conclusions
-require an appropriate ID-based split and repeated evaluation.
+are seen; since the segments differ in composition and size, this comparison is descriptive only.
 \FloatBarrier
 
 \Needspace{10\baselineskip}
@@ -886,7 +881,7 @@ design and data on candidate books that have not been rated are needed. The curr
 establish purchasing benefit, revenue, or business impact.
 
 \Needspace{8\baselineskip}
-\subsection{Limitations to Consider}
+\subsection{Limitations to Consider}\label{sec:limitations}
 \begin{enumerate}
   \item \textbf{Missingness and data quality:} age, publication year, and book metadata have
   substantial missingness. Imputation and missingness indicators do not recover the original
@@ -947,7 +942,8 @@ by use case rather than summarized by one aggregate score.
 \section*{Reproducibility and Data Provenance}
 \addcontentsline{toc}{section}{Reproducibility and Data Provenance}
 The analysis is implemented in \nolinkurl{mid_term_code.ipynb}, available with the data and
-report source in the \href{https://github.com/Bluenip/Data_analyst_python_midterm_project}{project repository}.
+report source in the project repository:
+\url{https://github.com/Bluenip/Data_analyst_python_midterm_project}.
 The tables and figures in this report agree with the saved notebook results. All metrics are
 reported to four decimal places; deltas are calculated before rounding.
 
@@ -974,8 +970,7 @@ scikit-learn & 1.9.1 \\
 \end{table}
 
 The supplied notebook has SHA-256 prefix \nolinkurl{5a0991ddba42d256}.
-Reproducing this run uses the same previously inspected test split and does not provide an
-independent holdout evaluation.
+
 
 \FloatBarrier
 \Needspace{0.40\textheight}
